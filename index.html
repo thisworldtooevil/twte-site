@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A0A0A">
+<title>TWTE Media — This World Too Evil</title>
+<meta name="description" content="Boutique creative production. Photography, videography, and creative direction. Los Angeles.">
+<link rel="preconnect" href="https://use.typekit.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://use.typekit.net/gqu7nmo.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/SplitText.min.js"></script>
+<style>
+/* ── RESET & TOKENS ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0A0A0A;--off-black:#0F0F0F;--card-bg:#131313;
+  --red:#8B2222;--red-bright:#A53333;--red-dark:#5C1515;
+  --red-text:#D95050;--red-ui:#B83C3C;
+  --cream:#F2EDE6;--cream-dim:#D4CFC8;
+  --grey:#7A7A7A;--grey-text:#8A8A8A;--grey-dim:#3A3A3A;--grey-faint:#1E1E1E;
+  --rule:#2A2A2A;
+  --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+  --ease-out-quart:cubic-bezier(0.25,1,0.5,1);
+}
+html{font-size:16px}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+
+/* ── GLOBAL ── */
+body{background:var(--black);color:var(--cream);font-family:'Space Mono',monospace;font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;animation:grain 8s steps(10) infinite}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}
+  10%{transform:translate(-2%,-5%)}20%{transform:translate(3%,2%)}
+  30%{transform:translate(-1%,-3%)}40%{transform:translate(4%,1%)}
+  50%{transform:translate(-3%,4%)}60%{transform:translate(2%,-2%)}
+  70%{transform:translate(-4%,3%)}80%{transform:translate(1%,-4%)}
+  90%{transform:translate(3%,-1%)}
+}
+a{color:inherit;text-decoration:none}
+
+/* ── SKIP LINK ── */
+.skip-link{position:absolute;top:-100%;left:16px;padding:12px 24px;background:var(--cream);color:var(--black);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;z-index:10002;border-radius:0 0 4px 4px;transition:top .3s}
+.skip-link:focus{top:0}
+
+/* ── CUSTOM CURSOR ── */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:10001;border-radius:50%;opacity:0;transition:opacity .3s}
+.cursor-dot{width:6px;height:6px;background:var(--cream);mix-blend-mode:difference;transform:translate(-50%,-50%)}
+.cursor-ring{width:40px;height:40px;border:1px solid rgba(242,237,230,.35);transform:translate(-50%,-50%);z-index:10000;transition:width .35s var(--ease-out-expo),height .35s var(--ease-out-expo),border-color .35s,opacity .3s}
+.cursor-ring.hover{width:64px;height:64px;border-color:var(--red-bright)}
+.cursor-ring.marquee-hover{width:80px;height:80px;border-color:var(--cream)}
+.cursor-active .cursor-dot,.cursor-active .cursor-ring{opacity:1}
+@media(hover:none){.cursor-dot,.cursor-ring{display:none!important}}
+
+/* ── SCROLL PROGRESS ── */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--red);z-index:10001;transform-origin:left;transform:scaleX(0);pointer-events:none}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 48px;mix-blend-mode:difference;transition:padding .5s var(--ease-out-expo),background .5s var(--ease-out-expo),transform .5s var(--ease-out-expo),backdrop-filter .5s var(--ease-out-expo)}
+.nav.scrolled{mix-blend-mode:normal;background:rgba(10,10,10,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:16px 48px}
+.nav.hidden{transform:translateY(-100%)}
+.nav .logo img{height:44px;width:auto;display:block}
+.nav-cta{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--cream-dim);transition:color .3s}
+.nav-cta:hover{color:var(--red-text)}
+
+/* ── SECTION LABEL ── */
+.section-label{display:flex;align-items:center;gap:16px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--grey-text);margin-bottom:48px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--rule);transform:scaleX(0);transform-origin:left;transition:transform 1.4s var(--ease-out-expo)}
+.section-label.in-view::after{transform:scaleX(1)}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 64px;overflow:hidden}
+.hero-ghost{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);font-family:'job-clarendon',serif;font-weight:900;font-size:clamp(20vw,28vw,360px);color:transparent;-webkit-text-stroke:1px rgba(242,237,230,.04);letter-spacing:20px;user-select:none;pointer-events:none;will-change:transform}
+.globe-container{position:absolute;top:50%;right:8%;transform:translateY(-55%);width:clamp(280px,35vw,500px);opacity:.35;pointer-events:none;will-change:transform}
+.globe-container img{width:100%;height:auto}
+.globe-glow{position:absolute;top:40%;right:12%;width:300px;height:300px;background:radial-gradient(circle,rgba(196,70,58,.08) 0%,transparent 70%);pointer-events:none;filter:blur(40px)}
+.hero-tagline{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--grey-text);margin-bottom:24px;position:relative;z-index:5}
+.hero-title{position:relative;z-index:5;margin-bottom:48px;font-size:0;line-height:0}
+.hero-title-mask{display:block;overflow:hidden}
+.hero-title img{width:clamp(300px,48vw,580px);height:auto;display:block}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:5}
+.hero-sub{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:1px;color:var(--cream-dim)}
+.hero-ctas{display:flex;gap:12px;align-items:center}
+.hero-btn{display:inline-block;padding:14px 36px;border:1px solid var(--cream-dim);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--cream);transition:all .35s ease}
+.hero-btn:hover{background:var(--cream);color:var(--black);border-color:var(--cream)}
+.hero-btn.primary{background:var(--red);border-color:var(--red)}
+.hero-btn.primary:hover{background:var(--red-bright);border-color:var(--red-bright);color:var(--cream)}
+
+/* ── PORTFOLIO MARQUEE ── */
+.portfolio-section{padding:120px 0 80px;overflow:hidden}
+.portfolio-section .section-label{padding:0 48px}
+.marquee-track{display:flex;gap:8px;width:max-content;will-change:transform;touch-action:pan-y}
+.marquee-item{flex-shrink:0;height:420px;min-width:200px;overflow:hidden;cursor:pointer;position:relative;border:none;background:none;padding:0;font:inherit;color:inherit}
+.marquee-item img{height:100%;width:auto;display:block;object-fit:cover;transition:transform .6s var(--ease-out-expo),filter .6s var(--ease-out-expo)}
+.marquee-item:hover img{transform:scale(1.06)}
+.marquee-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.3) 0%,transparent 50%);opacity:0;transition:opacity .5s;pointer-events:none}
+.marquee-item:hover::after{opacity:1}
+.marquee-controls{display:flex;justify-content:flex-end;gap:8px;padding:16px 48px 0}
+.marquee-arrow{width:44px;height:44px;border:1px solid var(--grey-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Space Mono',monospace;font-size:18px;color:var(--cream-dim);transition:all .3s;user-select:none;background:transparent}
+.marquee-arrow:hover{border-color:var(--cream);color:var(--cream)}
+
+/* ── VIDEO SECTIONS ── */
+.video-section{position:relative;width:100%;height:100vh;overflow:hidden;will-change:clip-path}
+.video-section video{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);min-width:100%;min-height:100%;width:auto;height:auto;object-fit:cover}
+.video-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,10,.6) 0%,rgba(10,10,10,.08) 35%,rgba(10,10,10,.08) 65%,rgba(10,10,10,.6) 100%);pointer-events:none;transition:opacity 1s}
+.video-label-overlay{position:absolute;bottom:48px;left:48px;z-index:2;will-change:transform}
+.video-label-overlay span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--cream-dim)}
+
+/* ── SERVICES ── */
+.services-section{padding:120px 48px}
+.services-title{font-family:'job-clarendon',serif;font-weight:900;font-size:clamp(36px,5vw,64px);line-height:1.05;margin-bottom:64px}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;perspective:1200px}
+.service-card{background:var(--card-bg);padding:48px 36px;display:flex;flex-direction:column;min-height:380px;border-top:2px solid var(--rule);transition:border-color .4s,box-shadow .4s,transform .4s;transform-style:preserve-3d}
+.service-card:hover{border-color:var(--red);box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(-4px)}
+.service-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--grey-text);letter-spacing:2px;margin-bottom:24px}
+.service-name{font-family:'job-clarendon',serif;font-weight:900;font-size:28px;margin-bottom:20px;line-height:1.15}
+.service-desc{font-size:13px;line-height:1.75;color:var(--cream-dim);flex:1;margin-bottom:32px}
+.inquire-btn{display:inline-block;align-self:flex-start;padding:12px 32px;border:1px solid var(--grey-dim);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--cream);transition:all .35s}
+.inquire-btn:hover{border-color:var(--red-text);color:var(--red-text)}
+
+/* ── HOW IT WORKS ── */
+.how-section{padding:120px 48px}
+.how-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}
+.how-card{background:var(--card-bg);padding:48px 40px;border:1px solid var(--rule);transition:border-color .4s,transform .4s,box-shadow .4s}
+.how-card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.how-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--red-text);letter-spacing:2px;margin-bottom:20px;text-transform:uppercase}
+.how-name{font-family:'job-clarendon',serif;font-weight:900;font-size:22px;margin-bottom:16px;line-height:1.2}
+.how-desc{font-size:13px;line-height:1.75;color:var(--cream-dim)}
+
+/* ── CONTACT ── */
+.contact-section{padding:120px 48px;text-align:center}
+.contact-section h2{font-family:'job-clarendon',serif;font-weight:900;font-style:italic;font-size:clamp(48px,6vw,80px);line-height:1.1;margin-bottom:24px;color:transparent;-webkit-text-stroke:1.5px var(--red-text);letter-spacing:.5px;transition:color 1.2s var(--ease-out-expo),-webkit-text-stroke-width 1.2s var(--ease-out-expo)}
+.contact-section h2.filled{color:var(--red-text);-webkit-text-stroke-width:0}
+.contact-sub{font-size:14px;line-height:1.75;color:var(--cream-dim);max-width:520px;margin:0 auto 48px}
+.inquiry-form{max-width:500px;margin:0 auto}
+.form-group{display:block;margin-bottom:24px}
+.form-group:last-of-type{margin-bottom:32px}
+.form-label{display:block;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--grey-text);margin-bottom:8px}
+.form-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--grey);padding:12px 0;font-family:'Space Mono',monospace;font-size:14px;color:var(--cream);outline:none;transition:border-color .4s ease,box-shadow .4s ease}
+.form-input:focus-visible{border-color:var(--cream);box-shadow:0 1px 0 0 var(--cream)}
+.form-submit{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--cream);background:transparent;border:1px solid var(--red-ui);padding:16px 48px;cursor:pointer;transition:all .35s}
+.form-submit:hover{background:var(--red);border-color:var(--red)}
+.contact-actions{display:flex;gap:16px;justify-content:center}
+.contact-btn{padding:14px 40px;border:1px solid var(--grey-dim);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all .35s}
+.contact-btn:hover{border-color:var(--cream);color:var(--cream)}
+
+/* ── FOOTER ── */
+footer{display:flex;justify-content:space-between;align-items:center;padding:32px 80px 32px 48px;border-top:1px solid var(--rule)}
+.footer-mark{opacity:.3}.footer-mark img{height:28px;width:auto}
+.footer-right{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--grey-dim)}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;z-index:1000;background:rgba(10,10,10,.96);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .5s var(--ease-out-expo)}
+.lightbox.active{opacity:1;visibility:visible}
+.lightbox img{max-width:85vw;max-height:85vh;object-fit:contain;transform:scale(.92);filter:blur(8px);transition:transform .6s var(--ease-out-expo),filter .6s var(--ease-out-expo)}
+.lightbox.active img{transform:scale(1);filter:blur(0)}
+.lightbox-close,.lightbox-prev,.lightbox-next{position:absolute;background:none;border:1px solid var(--grey-dim);color:var(--grey-text);font-family:'Space Mono',monospace;cursor:pointer;transition:all .3s;z-index:2}
+.lightbox-close{top:32px;right:32px;width:44px;height:44px;font-size:20px;display:flex;align-items:center;justify-content:center}
+.lightbox-prev,.lightbox-next{top:50%;width:44px;height:44px;font-size:18px;display:flex;align-items:center;justify-content:center;transform:translateY(-50%)}
+.lightbox-prev{left:24px}
+.lightbox-next{right:24px}
+.lightbox-close:hover,.lightbox-prev:hover,.lightbox-next:hover{border-color:var(--cream);color:var(--cream)}
+.lightbox-counter{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--grey-text)}
+
+/* ── REVEAL BASE ── */
+.reveal-up{opacity:0;transform:translateY(40px)}
+
+/* ── FOCUS STATES ── */
+:focus-visible{outline:2px solid var(--red-text);outline-offset:4px}
+.hero-btn:focus-visible,.inquire-btn:focus-visible,.contact-btn:focus-visible,.nav-cta:focus-visible,.form-submit:focus-visible{outline:2px solid var(--cream);outline-offset:4px}
+.marquee-item:focus-visible{outline:2px solid var(--cream);outline-offset:-2px}
+.marquee-arrow:focus-visible,.lightbox-close:focus-visible,.lightbox-prev:focus-visible,.lightbox-next:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
+.form-input:focus-visible{border-color:var(--cream);box-shadow:0 1px 0 0 var(--cream);outline:none}
+
+/* ── SITE WATERMARK ── */
+.site-watermark{position:fixed;bottom:24px;right:24px;z-index:90;opacity:.12;pointer-events:none}
+.site-watermark img{height:44px;width:auto}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .cursor-dot,.cursor-ring,.scroll-progress{display:none!important}
+  body::after{animation:none!important}
+  .reveal-up{opacity:1;transform:none}
+  .section-label::after{transform:scaleX(1)}
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav{padding:20px 24px}
+  .nav.scrolled{padding:14px 24px}
+  .hero{padding:0 24px 48px}
+  .globe-container,.globe-glow{display:none}
+  .hero-ghost{font-size:30vw}
+  .hero-bottom{flex-direction:column;gap:24px;align-items:flex-start}
+  .hero-ctas{flex-direction:column;width:100%;gap:10px}
+  .hero-ctas .hero-btn{text-align:center;width:100%}
+  .portfolio-section{padding:80px 0 60px}
+  .portfolio-section .section-label{padding:0 24px}
+  .marquee-item{height:280px;min-width:140px}
+  .marquee-controls{padding:16px 24px 0}
+  .video-section{height:auto;aspect-ratio:16/9}
+  .video-section video{object-fit:contain;min-width:100%;min-height:auto;width:100%;height:100%}
+  .video-label-overlay{bottom:24px;left:24px}
+  .services-section{padding:80px 24px}
+  .services-grid{grid-template-columns:1fr;gap:0;perspective:none}
+  .service-card{min-height:auto;padding:36px 28px}
+  .how-section{padding:80px 24px}
+  .how-grid{grid-template-columns:1fr;gap:0}
+  .how-card{padding:36px 28px}
+  .contact-section{padding:80px 24px}
+  .contact-actions{flex-direction:column;align-items:center}
+  footer{padding:24px}
+  .site-watermark{bottom:16px;right:16px}
+  .site-watermark img{height:32px}
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Primary">
+<a href="#" class="logo" aria-label="TWTE Media, return to top"><img src="images/logo-nav.png" alt="TWTE" width="44" height="44"></a>
+<a href="#contact" class="nav-cta magnetic">Get in Touch</a>
+</nav>
+
+<div class="site-watermark" aria-hidden="true"><img src="images/logo-watermark.png" alt="" width="44" height="44"></div>
+
+<main id="main">
+
+<!-- ── HERO ── -->
+<section class="hero" aria-label="Introduction">
+<div class="hero-ghost" aria-hidden="true">EVIL</div>
+<div class="globe-glow" aria-hidden="true"></div>
+<div class="globe-container" aria-hidden="true"><img src="images/globe-element.png" alt="" width="500" height="500"></div>
+
+<div class="hero-tagline">From the dark depths below to the heavens above</div>
+<h1 class="hero-title"><span class="hero-title-mask"><img src="images/hero-title.png" alt="This World Too Evil"></span></h1>
+<div class="hero-bottom">
+<div class="hero-sub">Underground roots. Boardroom results.</div>
+<div class="hero-ctas">
+<a href="#contact" class="hero-btn primary magnetic">Get In Touch</a>
+<a href="#portfolio" class="hero-btn magnetic">View Work</a>
+</div>
+</div>
+</section>
+
+<!-- ── PORTFOLIO ── -->
+<section class="portfolio-section" id="portfolio" aria-label="Selected work">
+<div class="section-label">Selected Work</div>
+<div class="marquee-track" id="marqueeTrack">
+<!-- 34 portfolio photographs. Update alt text with specific descriptions for each image. -->
+<button class="marquee-item" data-index="0" type="button" aria-label="View portfolio photograph 1"><img src="images/photo-01.jpg" alt="Selected work, photograph 1 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="1" type="button" aria-label="View portfolio photograph 2"><img src="images/photo-15.jpg" alt="Selected work, photograph 2 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="2" type="button" aria-label="View portfolio photograph 3"><img src="images/photo-50.jpg" alt="Selected work, photograph 3 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="3" type="button" aria-label="View portfolio photograph 4"><img src="images/photo-56.jpg" alt="Selected work, photograph 4 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="4" type="button" aria-label="View portfolio photograph 5"><img src="images/photo-19.jpg" alt="Selected work, photograph 5 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="5" type="button" aria-label="View portfolio photograph 6"><img src="images/photo-33.jpg" alt="Selected work, photograph 6 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="6" type="button" aria-label="View portfolio photograph 7"><img src="images/photo-41.jpg" alt="Selected work, photograph 7 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="7" type="button" aria-label="View portfolio photograph 8"><img src="images/photo-52.jpg" alt="Selected work, photograph 8 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="8" type="button" aria-label="View portfolio photograph 9"><img src="images/photo-03.jpg" alt="Selected work, photograph 9 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="9" type="button" aria-label="View portfolio photograph 10"><img src="images/photo-51.jpg" alt="Selected work, photograph 10 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="10" type="button" aria-label="View portfolio photograph 11"><img src="images/photo-14.jpg" alt="Selected work, photograph 11 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="11" type="button" aria-label="View portfolio photograph 12"><img src="images/photo-59.jpg" alt="Selected work, photograph 12 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="12" type="button" aria-label="View portfolio photograph 13"><img src="images/photo-31.jpg" alt="Selected work, photograph 13 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="13" type="button" aria-label="View portfolio photograph 14"><img src="images/photo-46.jpg" alt="Selected work, photograph 14 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="14" type="button" aria-label="View portfolio photograph 15"><img src="images/photo-35.jpg" alt="Selected work, photograph 15 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="15" type="button" aria-label="View portfolio photograph 16"><img src="images/photo-53.jpg" alt="Selected work, photograph 16 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="16" type="button" aria-label="View portfolio photograph 17"><img src="images/photo-04.jpg" alt="Selected work, photograph 17 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="17" type="button" aria-label="View portfolio photograph 18"><img src="images/photo-36.jpg" alt="Selected work, photograph 18 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="18" type="button" aria-label="View portfolio photograph 19"><img src="images/photo-34.jpg" alt="Selected work, photograph 19 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="19" type="button" aria-label="View portfolio photograph 20"><img src="images/photo-57.jpg" alt="Selected work, photograph 20 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="20" type="button" aria-label="View portfolio photograph 21"><img src="images/photo-20.jpg" alt="Selected work, photograph 21 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="21" type="button" aria-label="View portfolio photograph 22"><img src="images/photo-43.jpg" alt="Selected work, photograph 22 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="22" type="button" aria-label="View portfolio photograph 23"><img src="images/photo-32.jpg" alt="Selected work, photograph 23 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="23" type="button" aria-label="View portfolio photograph 24"><img src="images/photo-54.jpg" alt="Selected work, photograph 24 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="24" type="button" aria-label="View portfolio photograph 25"><img src="images/photo-09.jpg" alt="Selected work, photograph 25 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="25" type="button" aria-label="View portfolio photograph 26"><img src="images/photo-22.jpg" alt="Selected work, photograph 26 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="26" type="button" aria-label="View portfolio photograph 27"><img src="images/photo-17.jpg" alt="Selected work, photograph 27 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="27" type="button" aria-label="View portfolio photograph 28"><img src="images/photo-55.jpg" alt="Selected work, photograph 28 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="28" type="button" aria-label="View portfolio photograph 29"><img src="images/photo-37.jpg" alt="Selected work, photograph 29 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="29" type="button" aria-label="View portfolio photograph 30"><img src="images/photo-21.jpg" alt="Selected work, photograph 30 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="30" type="button" aria-label="View portfolio photograph 31"><img src="images/photo-10.jpg" alt="Selected work, photograph 31 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="31" type="button" aria-label="View portfolio photograph 32"><img src="images/photo-58.jpg" alt="Selected work, photograph 32 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="32" type="button" aria-label="View portfolio photograph 33"><img src="images/photo-16.jpg" alt="Selected work, photograph 33 of 34" loading="lazy"></button>
+<button class="marquee-item" data-index="33" type="button" aria-label="View portfolio photograph 34"><img src="images/photo-48.jpg" alt="Selected work, photograph 34 of 34" loading="lazy"></button>
+<!-- Duplicate set for seamless marquee loop -->
+<button class="marquee-item" data-index="0" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-01.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="1" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-15.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="2" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-50.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="3" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-56.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="4" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-19.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="5" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-33.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="6" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-41.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="7" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-52.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="8" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-03.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="9" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-51.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="10" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-14.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="11" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-59.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="12" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-31.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="13" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-46.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="14" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-35.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="15" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-53.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="16" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-04.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="17" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-36.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="18" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-34.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="19" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-57.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="20" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-20.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="21" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-43.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="22" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-32.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="23" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-54.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="24" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-09.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="25" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-22.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="26" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-17.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="27" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-55.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="28" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-37.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="29" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-21.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="30" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-10.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="31" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-58.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="32" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-16.jpg" alt="" loading="lazy"></button>
+<button class="marquee-item" data-index="33" type="button" aria-hidden="true" tabindex="-1"><img src="images/photo-48.jpg" alt="" loading="lazy"></button>
+</div>
+<div class="marquee-controls">
+<button class="marquee-arrow" id="marqueeLeft" type="button" aria-label="Scroll gallery left">&#8592;</button>
+<button class="marquee-arrow" id="marqueeRight" type="button" aria-label="Scroll gallery right">&#8594;</button>
+</div>
+</section>
+
+<!-- ── VIDEO 1 ── -->
+<section class="video-section" id="videoReel2" aria-label="Samuel Trouble Castellanos video reel">
+<video muted loop playsinline preload="metadata">
+<source src="images/samuel-trouble-castellanos-golden-boy.mp4" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
+<div class="video-label-overlay"><span>SAMUEL "TROUBLE" CASTELLANOS / GOLDEN BOY PROMOTIONS</span></div>
+</section>
+
+<!-- ── VIDEO 2 ── -->
+<section class="video-section" id="videoReel" aria-label="Palacio Palace Renegade video reel">
+<video id="reelPlayer" muted loop playsinline preload="none">
+<source src="images/palacio-palace-renegade.mp4" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
+<div class="video-label-overlay"><span id="videoLabel">PALACIO PALACE RENEGADE</span></div>
+</section>
+
+<!-- ── SERVICES (moved before contact) ── -->
+<section class="services-section" id="services" aria-label="Services">
+<div class="section-label">What We Do</div>
+<h2 class="services-title split-heading">Services</h2>
+<div class="services-grid">
+<div class="service-card">
+<div class="service-num">01</div>
+<div class="service-name">Photography</div>
+<div class="service-desc">Editorial, documentary, and event photography. 35mm analog and digital. From intimate portraits to large-scale live coverage. Every frame has intention behind it.</div>
+<a href="#contact" class="inquire-btn magnetic">Inquire</a>
+</div>
+<div class="service-card">
+<div class="service-num">02</div>
+<div class="service-name">Videography</div>
+<div class="service-desc">Music videos, brand films, event documentation, and short-form content. Shot, directed, and edited in-house. DaVinci Resolve color. Delivered ready to post or broadcast.</div>
+<a href="#contact" class="inquire-btn magnetic">Inquire</a>
+</div>
+<div class="service-card">
+<div class="service-num">03</div>
+<div class="service-name">Creative Direction</div>
+<div class="service-desc">Full-scope brand strategy, visual identity systems, content production, and campaign execution. Monthly retainer model. Built for brands with no bandwidth to spare.</div>
+<a href="#contact" class="inquire-btn magnetic">Inquire</a>
+</div>
+</div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section" id="how" aria-label="How it works">
+<div class="section-label">How It Works</div>
+<div class="how-grid">
+<div class="how-card"><div class="how-num">01 / Working Hours</div><div class="how-name">9AM to 6PM PST</div><div class="how-desc">Monday through Friday. Outside these windows responses come as soon as possible. If there is a delay during hours, another session is in progress.</div></div>
+<div class="how-card"><div class="how-num">02 / Weekends</div><div class="how-name">Pre-approved only</div><div class="how-desc">Premium and Elite clients retain weekend posting coverage. All content is signed off before the weekend begins, no exceptions.</div></div>
+<div class="how-card"><div class="how-num">03 / Approvals</div><div class="how-name">Nothing posts blind</div><div class="how-desc">All content including graphics, captions, and video is submitted for client review before publishing. The process protects the brand at every stage.</div></div>
+<div class="how-card"><div class="how-num">04 / Alignment</div><div class="how-name">We start with a conversation</div><div class="how-desc">Every engagement opens with a full brand audit and alignment call. If the vision is not locked before we start, we do not start.</div></div>
+</div>
+</section>
+
+<!-- ── CONTACT (moved to after services) ── -->
+<section class="contact-section" id="contact" aria-label="Contact">
+<div class="section-label" style="justify-content:center">Get in touch</div>
+<h2 class="split-heading">Book a discovery.</h2>
+<p class="contact-sub reveal-up">Every project starts with a conversation. No pitch decks. No generic proposals. Just a direct call about what you need and whether we are the right fit.</p>
+<form class="inquiry-form" action="https://api.web3forms.com/submit" method="POST">
+  <input type="hidden" name="access_key" value="e097a1ac-3e1e-4da4-bc0a-65b1a6741d25">
+  <input type="hidden" name="subject" value="New TWTE Media Inquiry">
+  <input type="hidden" name="redirect" value="https://thisworldtooevil.com#contact">
+  <input type="checkbox" name="botcheck" style="display:none">
+  <label class="form-group">
+    <span class="form-label">Name *</span>
+    <input class="form-input" type="text" name="name" required autocomplete="name">
+  </label>
+  <label class="form-group">
+    <span class="form-label">Email *</span>
+    <input class="form-input" type="email" name="email" required autocomplete="email">
+  </label>
+  <label class="form-group">
+    <span class="form-label">Phone</span>
+    <input class="form-input" type="tel" name="phone" autocomplete="tel">
+  </label>
+  <button class="form-submit magnetic" type="submit">Submit</button>
+</form>
+<div class="contact-actions reveal-up" style="margin-top:32px">
+<a href="https://instagram.com/thisworldtooevil" target="_blank" rel="noopener noreferrer" class="contact-btn magnetic">Instagram</a>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="footer-mark"><img src="images/logo-nav.png" alt="TWTE" width="28" height="28"></div>
+<div class="footer-right">&copy; 2026 / LOS ANGELES</div>
+</footer>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Image viewer" aria-modal="true">
+<button class="lightbox-close" type="button" aria-label="Close image viewer">&times;</button>
+<button class="lightbox-prev" type="button" aria-label="Previous image">&#8592;</button>
+<button class="lightbox-next" type="button" aria-label="Next image">&#8594;</button>
+<img src="" alt="Portfolio photograph enlarged">
+<div class="lightbox-counter" aria-live="polite"></div>
+</div>
+
+<script>
+/* ── SETUP ── */
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouchDevice = window.matchMedia('(hover: none)').matches;
+
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  orientation: 'vertical',
+  smoothWheel: true
+});
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(time => { lenis.raf(time * 1000) });
+gsap.ticker.lagSmoothing(0);
+gsap.registerPlugin(ScrollTrigger, SplitText);
+
+/* ── SCROLL PROGRESS ── */
+if (!prefersReducedMotion) {
+  gsap.to('.scroll-progress', {
+    scaleX: 1, ease: 'none',
+    scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: true }
+  });
+}
+
+/* ── CUSTOM CURSOR ── */
+if (!isTouchDevice && !prefersReducedMotion) {
+  const dot = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  const xDot = gsap.quickTo(dot, 'x', { duration: 0 });
+  const yDot = gsap.quickTo(dot, 'y', { duration: 0 });
+  const xRing = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' });
+  const yRing = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' });
+
+  document.addEventListener('mousemove', e => {
+    xDot(e.clientX); yDot(e.clientY);
+    xRing(e.clientX); yRing(e.clientY);
+  });
+  document.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
+  document.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
+
+  document.body.style.cursor = 'none';
+  document.querySelectorAll('a, button, input, [role="button"]').forEach(el => { el.style.cursor = 'none' });
+
+  document.querySelectorAll('a, button, input, .form-submit').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+  });
+  document.querySelectorAll('.marquee-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.classList.add('marquee-hover'); ring.classList.remove('hover') });
+    el.addEventListener('mouseleave', () => ring.classList.remove('marquee-hover'));
+  });
+}
+
+/* ── NAV SCROLL BEHAVIOR ── */
+const nav = document.querySelector('.nav');
+let lastScrollY = 0;
+ScrollTrigger.create({
+  onUpdate: () => {
+    const y = window.scrollY || document.documentElement.scrollTop;
+    if (y > 200) {
+      nav.classList.add('scrolled');
+      if (y > lastScrollY + 8 && y > 400) nav.classList.add('hidden');
+      else if (y < lastScrollY - 8) nav.classList.remove('hidden');
+    } else {
+      nav.classList.remove('scrolled', 'hidden');
+    }
+    lastScrollY = y;
+  }
+});
+
+/* ── SECTION LABEL LINE DRAW ── */
+document.querySelectorAll('.section-label').forEach(label => {
+  ScrollTrigger.create({
+    trigger: label, start: 'top 88%', once: true,
+    onEnter: () => label.classList.add('in-view')
+  });
+});
+
+if (!prefersReducedMotion) {
+
+/* ── HERO ENTRANCE ── */
+const heroTl = gsap.timeline({ delay: 0.2, defaults: { ease: 'power3.out' } });
+heroTl
+  .from('.hero-ghost', { opacity: 0, scale: 0.94, duration: 2, ease: 'power2.out' })
+  .from('.globe-container', { opacity: 0, xPercent: 8, duration: 1.6, ease: 'power2.out' }, 0.3)
+  .from('.globe-glow', { opacity: 0, scale: 0.7, duration: 1.4 }, 0.5);
+
+/* Tagline character reveal */
+const taglineSplit = new SplitText('.hero-tagline', { type: 'chars' });
+heroTl.from(taglineSplit.chars, { opacity: 0, y: 8, duration: 0.3, stagger: 0.018 }, 0.7);
+
+/* Title mask reveal */
+heroTl.from('.hero-title-mask img', { yPercent: 110, duration: 1.2, ease: 'power4.out' }, 1.0);
+
+heroTl
+  .from('.hero-sub', { opacity: 0, y: 20, duration: 0.9 }, 1.5)
+  .from('.hero-ctas .hero-btn', { opacity: 0, y: 20, duration: 0.8, stagger: 0.1 }, 1.7)
+  .from('.nav', { opacity: 0, y: -20, duration: 0.8 }, 1.7);
+
+/* ── HERO PARALLAX ── */
+gsap.to('.hero-ghost', {
+  yPercent: -70, opacity: 0, ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+});
+gsap.to('.globe-container', {
+  yPercent: -25, ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+});
+gsap.to('.globe-glow', {
+  yPercent: -40, scale: 1.3, ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+});
+gsap.to('.hero-title', {
+  yPercent: 15, opacity: 0, ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: '50% top', end: 'bottom top', scrub: true }
+});
+gsap.to('.hero-bottom', {
+  yPercent: 30, opacity: 0, ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: '50% top', end: 'bottom top', scrub: true }
+});
+
+/* ── SPLIT HEADINGS ── */
+document.querySelectorAll('.split-heading').forEach(el => {
+  const split = new SplitText(el, { type: 'words', mask: 'lines' });
+  gsap.from(split.words, {
+    yPercent: 120, duration: 1.1, ease: 'power4.out', stagger: 0.06,
+    scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+  });
+});
+
+/* ── VIDEO SECTION CINEMATIC ENTRY ── */
+const isMobileView = window.innerWidth <= 900;
+document.querySelectorAll('.video-section').forEach(section => {
+  const overlay = section.querySelector('.video-overlay');
+  const label = section.querySelector('.video-label-overlay');
+  const video = section.querySelector('video');
+
+  if (!isMobileView) {
+    /* Desktop: full cinematic scrub animations */
+    gsap.fromTo(section,
+      { clipPath: 'inset(5% 3% round 12px)' },
+      { clipPath: 'inset(0% 0% round 0px)', ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top 85%', end: 'top 15%', scrub: 1 }
+      }
+    );
+    gsap.fromTo(overlay,
+      { opacity: 0.85 },
+      { opacity: 0.35, ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top 60%', end: 'center center', scrub: 1 }
+      }
+    );
+    gsap.fromTo(label,
+      { yPercent: 40, opacity: 0 },
+      { yPercent: 0, opacity: 1, ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top 40%', end: 'center center', scrub: 1 }
+      }
+    );
+    gsap.to(video, {
+      scale: 1.08, ease: 'none',
+      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+  } else {
+    /* Mobile: simple once-trigger animations (avoids inverted scrub ranges on short sections) */
+    gsap.set(overlay, { opacity: 0.35 });
+    gsap.fromTo(label,
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: section, start: 'top 85%', once: true }
+      }
+    );
+  }
+});
+
+/* Video lazy play: only load/play when near viewport, pause when offscreen */
+const vidObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const video = entry.target.querySelector('video');
+    if (!video) return;
+    if (entry.isIntersecting) {
+      if (video.preload !== 'auto') video.preload = 'auto';
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  });
+}, { rootMargin: '300px' });
+document.querySelectorAll('.video-section').forEach(s => vidObs.observe(s));
+
+/* ── SERVICE CARDS ── */
+ScrollTrigger.batch('.service-card', {
+  onEnter: batch => {
+    gsap.fromTo(batch,
+      { opacity: 0, y: 60, rotateX: 6 },
+      { opacity: 1, y: 0, rotateX: 0, duration: 1, ease: 'power3.out', stagger: 0.15 }
+    );
+  },
+  start: 'top 88%', once: true
+});
+
+/* ── HOW CARDS ── */
+ScrollTrigger.batch('.how-card', {
+  onEnter: batch => {
+    gsap.fromTo(batch,
+      { opacity: 0, x: -40, scale: 0.97 },
+      { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'power3.out', stagger: 0.12 }
+    );
+  },
+  start: 'top 88%', once: true
+});
+
+/* ── CONTACT HEADING FILL ── */
+ScrollTrigger.create({
+  trigger: '.contact-section h2',
+  start: 'top 75%', once: true,
+  onEnter: () => document.querySelector('.contact-section h2').classList.add('filled')
+});
+
+/* ── FORM FIELDS STAGGER ── */
+ScrollTrigger.batch('.form-group, .form-submit', {
+  onEnter: batch => {
+    gsap.fromTo(batch,
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1 }
+    );
+  },
+  start: 'top 90%', once: true
+});
+
+/* ── GENERAL REVEALS ── */
+ScrollTrigger.batch('.reveal-up', {
+  onEnter: batch => { gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12 }) },
+  start: 'top 88%', once: true
+});
+
+} else {
+  /* Reduced motion: show everything immediately */
+  gsap.set('.reveal-up, .service-card, .how-card, .hero-ghost, .globe-container, .globe-glow, .hero-tagline, .hero-title, .hero-title-mask img, .hero-sub, .hero-ctas .hero-btn, .nav, .form-group, .form-submit, .video-label-overlay', {
+    opacity: 1, x: 0, y: 0, yPercent: 0, xPercent: 0, scale: 1, rotateX: 0, clearProps: 'clipPath,filter'
+  });
+  document.querySelector('.contact-section h2').classList.add('filled');
+}
+
+/* ── MAGNETIC BUTTONS ── */
+if (!isTouchDevice && !prefersReducedMotion) {
+  document.querySelectorAll('.magnetic').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      gsap.to(el, { x: x * 0.25, y: y * 0.25, duration: 0.3, ease: 'power2.out' });
+    });
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
+    });
+  });
+}
+
+/* ── MARQUEE ── */
+const track = document.getElementById('marqueeTrack');
+const allItems = track.querySelectorAll('.marquee-item');
+const halfCount = allItems.length / 2;
+let marqueeAnim = null;
+let marqueeHalfWidth = 0;
+let marqueeReady = false;
+let autoScrollTimer = null;
+let wasDragged = false;
+
+function calcHalfWidth() {
+  let w = 0;
+  const items = Array.from(allItems).slice(0, halfCount);
+  for (const el of items) w += el.offsetWidth + 8;
+  return w;
+}
+
+function initMarquee() {
+  if (marqueeReady) return;
+  marqueeHalfWidth = calcHalfWidth();
+  /* Items have min-width:200px/140px, so half = 34 items * ~200px = ~6800px minimum.
+     If we get less than 2000px, images haven't loaded their natural width yet. Retry. */
+  if (marqueeHalfWidth < 2000) {
+    setTimeout(initMarquee, 250);
+    return;
+  }
+  marqueeReady = true;
+  marqueeAnim = gsap.to(track, {
+    x: -marqueeHalfWidth,
+    duration: halfCount * 3.5,
+    ease: 'none',
+    repeat: -1,
+    modifiers: { x: gsap.utils.unitize(x => parseFloat(x) % marqueeHalfWidth) }
+  });
+}
+
+/* Start retry loop immediately */
+initMarquee();
+
+function pauseAutoScroll() {
+  if (marqueeAnim) marqueeAnim.pause();
+  clearTimeout(autoScrollTimer);
+}
+
+let momentumTween = null;
+
+function killMomentum() {
+  if (momentumTween) { momentumTween.kill(); momentumTween = null; }
+}
+
+function resumeAutoScrollAfterDelay() {
+  clearTimeout(autoScrollTimer);
+  autoScrollTimer = setTimeout(() => {
+    if (!marqueeAnim || !marqueeReady) return;
+    killMomentum();
+    /* Sync animation progress to where the track currently sits */
+    const pos = parseFloat(gsap.getProperty(track, 'x')) || 0;
+    const normalized = (((-pos) % marqueeHalfWidth) + marqueeHalfWidth) % marqueeHalfWidth;
+    marqueeAnim.progress(normalized / marqueeHalfWidth);
+    marqueeAnim.play();
+  }, 4000);
+}
+
+/* Desktop hover slow/resume */
+track.addEventListener('mouseenter', () => { if (marqueeAnim) gsap.to(marqueeAnim, { timeScale: 0.15, duration: 0.8 }) });
+track.addEventListener('mouseleave', () => { if (marqueeAnim) gsap.to(marqueeAnim, { timeScale: 1, duration: 0.8 }) });
+
+/* Arrows: always work by moving track directly, then schedule auto-scroll resume */
+function getItemWidth() { return (allItems[0] ? allItems[0].offsetWidth : 200) + 8; }
+
+document.getElementById('marqueeLeft').addEventListener('click', () => {
+  pauseAutoScroll();
+  killMomentum();
+  const cur = parseFloat(gsap.getProperty(track, 'x')) || 0;
+  momentumTween = gsap.to(track, { x: cur + getItemWidth(), duration: 0.4, ease: 'power2.out', onComplete: () => { momentumTween = null; resumeAutoScrollAfterDelay(); } });
+});
+document.getElementById('marqueeRight').addEventListener('click', () => {
+  pauseAutoScroll();
+  killMomentum();
+  const cur = parseFloat(gsap.getProperty(track, 'x')) || 0;
+  momentumTween = gsap.to(track, { x: cur - getItemWidth(), duration: 0.4, ease: 'power2.out', onComplete: () => { momentumTween = null; resumeAutoScrollAfterDelay(); } });
+});
+
+/* Touch drag/swipe for mobile */
+(function() {
+  let startX = 0, startTrackX = 0, isDragging = false, velocity = 0, lastX = 0, lastTime = 0;
+  let touchStartItem = null;
+
+  track.addEventListener('touchstart', e => {
+    isDragging = true;
+    wasDragged = false;
+    touchStartItem = e.target.closest('.marquee-item');
+    startX = e.touches[0].clientX;
+    startTrackX = parseFloat(gsap.getProperty(track, 'x')) || 0;
+    lastX = startX;
+    lastTime = Date.now();
+    pauseAutoScroll();
+    killMomentum();
+  }, { passive: true });
+
+  track.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const x = e.touches[0].clientX;
+    const dx = x - startX;
+    if (Math.abs(dx) > 8) wasDragged = true;
+    const now = Date.now();
+    const dt = now - lastTime || 1;
+    velocity = (x - lastX) / dt;
+    lastX = x;
+    lastTime = now;
+    gsap.set(track, { x: startTrackX + dx });
+  }, { passive: true });
+
+  track.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+
+    if (!wasDragged) {
+      /* Tap, not swipe: open lightbox on the element under the finger at touchstart */
+      if (touchStartItem && touchStartItem.dataset.index != null) {
+        openLightbox(parseInt(touchStartItem.dataset.index));
+      }
+      resumeAutoScrollAfterDelay();
+      return;
+    }
+
+    /* Swipe: apply momentum then schedule resume */
+    const mom = velocity * 180;
+    const currentX = parseFloat(gsap.getProperty(track, 'x')) || 0;
+    momentumTween = gsap.to(track, {
+      x: currentX + mom,
+      duration: Math.min(Math.abs(mom) / 500, 1.2),
+      ease: 'power3.out',
+      onComplete: () => { momentumTween = null; resumeAutoScrollAfterDelay(); }
+    });
+  }, { passive: true });
+})();
+
+/* ── LIGHTBOX ── */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+const lightboxCounter = lightbox.querySelector('.lightbox-counter');
+const lbImages = Array.from(document.querySelectorAll('.marquee-item:not([aria-hidden]) img'));
+let currentLb = 0;
+let lastFocusedEl = null;
+
+function openLightbox(index) {
+  currentLb = index;
+  updateLightbox();
+  lightbox.classList.add('active');
+  lenis.stop();
+  document.body.style.overflow = 'hidden';
+  lastFocusedEl = document.activeElement;
+  lightbox.querySelector('.lightbox-close').focus();
+}
+
+function updateLightbox() {
+  lightboxImg.src = lbImages[currentLb].src;
+  lightboxImg.alt = lbImages[currentLb].alt || 'Portfolio photograph enlarged';
+  lightboxCounter.textContent = (currentLb + 1) + ' / ' + lbImages.length;
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
+  lenis.start();
+  if (lastFocusedEl) lastFocusedEl.focus();
+}
+
+function navigateLb(dir) {
+  currentLb = (currentLb + dir + lbImages.length) % lbImages.length;
+  updateLightbox();
+}
+
+document.querySelectorAll('.marquee-item').forEach(item => {
+  item.addEventListener('click', e => {
+    if (wasDragged) { e.preventDefault(); wasDragged = false; return; }
+    openLightbox(parseInt(item.dataset.index));
+  });
+});
+
+lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+lightbox.querySelector('.lightbox-prev').addEventListener('click', () => navigateLb(-1));
+lightbox.querySelector('.lightbox-next').addEventListener('click', () => navigateLb(1));
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox() });
+
+/* Lightbox keyboard: Escape, arrows, focus trap */
+lightbox.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') navigateLb(1);
+  if (e.key === 'ArrowLeft') navigateLb(-1);
+  if (e.key === 'Tab') {
+    const btns = lightbox.querySelectorAll('button');
+    const first = btns[0], last = btns[btns.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+  }
+});
+
+/* ── VIDEO PLAYLIST ── */
+const reelPlayer = document.getElementById('reelPlayer');
+const videoLabel = document.getElementById('videoLabel');
+const playlist = [
+  { src: 'images/palacio-palace-renegade.mp4', label: 'PALACIO PALACE RENEGADE' }
+];
+let currentVideo = 0;
+reelPlayer.addEventListener('ended', () => {
+  currentVideo = (currentVideo + 1) % playlist.length;
+  reelPlayer.src = playlist[currentVideo].src;
+  videoLabel.textContent = playlist[currentVideo].label;
+  reelPlayer.play();
+});
+
+/* ── SMOOTH ANCHOR SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -80 }) }
+  });
+});
+</script>
+</body>
+</html>
