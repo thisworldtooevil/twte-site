@@ -348,7 +348,7 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:32p
 
 <!-- ── VIDEO 2 ── -->
 <section class="video-section" id="videoReel" aria-label="Palacio Palace Renegade video reel">
-<video id="reelPlayer" muted loop playsinline preload="none">
+<video id="reelPlayer" muted loop playsinline preload="none" poster="images/palacio-poster.jpg">
 <source src="images/palacio-palace-renegade.mp4" type="video/mp4">
 </video>
 <div class="video-overlay"></div>
@@ -694,32 +694,78 @@ if (!isTouchDevice && !prefersReducedMotion) {
   });
 }
 
-/* ── MARQUEE ── */
+/* ── MARQUEE CAROUSEL (momentum + snap-to-center) ── */
 const track = document.getElementById('marqueeTrack');
 const allItems = track.querySelectorAll('.marquee-item');
 const halfCount = allItems.length / 2;
+const origItems = Array.from(allItems).slice(0, halfCount);
 let marqueeAnim = null;
 let marqueeHalfWidth = 0;
 let marqueeReady = false;
 let autoScrollTimer = null;
 let wasDragged = false;
+let momentumTween = null;
+let snapTween = null;
 
 function calcHalfWidth() {
   let w = 0;
-  const items = Array.from(allItems).slice(0, halfCount);
-  for (const el of items) w += el.offsetWidth + 8;
+  for (const el of origItems) w += el.offsetWidth + 8;
   return w;
 }
+
+/* Track x value that centers origItems[index] in the viewport */
+function getSnapX(index) {
+  const item = origItems[index];
+  return -(item.offsetLeft + item.offsetWidth / 2 - window.innerWidth / 2);
+}
+
+/* Which original image is closest to viewport center at a given trackX */
+function getCenteredIndex(trackX) {
+  const vc = window.innerWidth / 2;
+  let bestIdx = 0, bestDist = Infinity;
+  for (let i = 0; i < halfCount; i++) {
+    const center = origItems[i].offsetLeft + origItems[i].offsetWidth / 2;
+    for (let w = -1; w <= 1; w++) {
+      const d = Math.abs(center + trackX + w * marqueeHalfWidth - vc);
+      if (d < bestDist) { bestDist = d; bestIdx = i; }
+    }
+  }
+  return bestIdx;
+}
+
+/* Wrapped snap x closest to currentX for a given image index */
+function bestWrappedSnap(index, currentX) {
+  const base = getSnapX(index);
+  let best = base, bestDist = Infinity;
+  for (let w = -2; w <= 2; w++) {
+    const c = base + w * marqueeHalfWidth;
+    const d = Math.abs(currentX - c);
+    if (d < bestDist) { bestDist = d; best = c; }
+  }
+  return best;
+}
+
+/* Snap in a specific direction: dir +1 = scroll backward (x increases), -1 = scroll forward (x decreases) */
+function directionalSnap(index, currentX, dir) {
+  const base = getSnapX(index);
+  let best = null, bestDist = Infinity;
+  for (let w = -2; w <= 2; w++) {
+    const c = base + w * marqueeHalfWidth;
+    const delta = c - currentX;
+    if ((dir > 0 && delta > 2) || (dir < 0 && delta < -2)) {
+      const d = Math.abs(delta);
+      if (d < bestDist) { bestDist = d; best = c; }
+    }
+  }
+  return best !== null ? best : bestWrappedSnap(index, currentX);
+}
+
+function haptic() { if (navigator.vibrate) navigator.vibrate(10); }
 
 function initMarquee() {
   if (marqueeReady) return;
   marqueeHalfWidth = calcHalfWidth();
-  /* Items have min-width:200px/140px, so half = 34 items * ~200px = ~6800px minimum.
-     If we get less than 2000px, images haven't loaded their natural width yet. Retry. */
-  if (marqueeHalfWidth < 2000) {
-    setTimeout(initMarquee, 250);
-    return;
-  }
+  if (marqueeHalfWidth < 2000) { setTimeout(initMarquee, 250); return; }
   marqueeReady = true;
   marqueeAnim = gsap.to(track, {
     x: -marqueeHalfWidth,
@@ -729,57 +775,74 @@ function initMarquee() {
     modifiers: { x: gsap.utils.unitize(x => parseFloat(x) % marqueeHalfWidth) }
   });
 }
-
-/* Start retry loop immediately */
 initMarquee();
+
+function killMotion() {
+  if (momentumTween) { momentumTween.kill(); momentumTween = null; }
+  if (snapTween) { snapTween.kill(); snapTween = null; }
+}
 
 function pauseAutoScroll() {
   if (marqueeAnim) marqueeAnim.pause();
   clearTimeout(autoScrollTimer);
 }
 
-let momentumTween = null;
-
-function killMomentum() {
-  if (momentumTween) { momentumTween.kill(); momentumTween = null; }
-}
-
 function resumeAutoScrollAfterDelay() {
   clearTimeout(autoScrollTimer);
   autoScrollTimer = setTimeout(() => {
     if (!marqueeAnim || !marqueeReady) return;
-    killMomentum();
-    /* Sync animation progress to where the track currently sits */
+    killMotion();
     const pos = parseFloat(gsap.getProperty(track, 'x')) || 0;
     const normalized = (((-pos) % marqueeHalfWidth) + marqueeHalfWidth) % marqueeHalfWidth;
     marqueeAnim.progress(normalized / marqueeHalfWidth);
     marqueeAnim.play();
-  }, 4000);
+  }, 3000);
+}
+
+function snapToNearest(fromX, cb) {
+  const idx = getCenteredIndex(fromX);
+  const target = bestWrappedSnap(idx, fromX);
+  const dist = Math.abs(fromX - target);
+  if (dist < 1) { haptic(); if (cb) cb(); return; }
+  const dur = Math.max(0.2, Math.min(dist / 1000, 0.5));
+  snapTween = gsap.to(track, {
+    x: target, duration: dur, ease: 'power2.out',
+    onComplete: () => { snapTween = null; haptic(); if (cb) cb(); }
+  });
 }
 
 /* Desktop hover slow/resume */
-track.addEventListener('mouseenter', () => { if (marqueeAnim) gsap.to(marqueeAnim, { timeScale: 0.15, duration: 0.8 }) });
-track.addEventListener('mouseleave', () => { if (marqueeAnim) gsap.to(marqueeAnim, { timeScale: 1, duration: 0.8 }) });
+track.addEventListener('mouseenter', () => { if (marqueeAnim && marqueeAnim.isActive()) gsap.to(marqueeAnim, { timeScale: 0.15, duration: 0.8 }) });
+track.addEventListener('mouseleave', () => { if (marqueeAnim && marqueeAnim.isActive()) gsap.to(marqueeAnim, { timeScale: 1, duration: 0.8 }) });
 
-/* Arrows: always work by moving track directly, then schedule auto-scroll resume */
-function getItemWidth() { return (allItems[0] ? allItems[0].offsetWidth : 200) + 8; }
-
+/* Arrow buttons: advance to next/prev image center */
 document.getElementById('marqueeLeft').addEventListener('click', () => {
-  pauseAutoScroll();
-  killMomentum();
-  const cur = parseFloat(gsap.getProperty(track, 'x')) || 0;
-  momentumTween = gsap.to(track, { x: cur + getItemWidth(), duration: 0.4, ease: 'power2.out', onComplete: () => { momentumTween = null; resumeAutoScrollAfterDelay(); } });
+  pauseAutoScroll(); killMotion();
+  const curX = parseFloat(gsap.getProperty(track, 'x')) || 0;
+  const curIdx = getCenteredIndex(curX);
+  const prevIdx = (curIdx - 1 + halfCount) % halfCount;
+  const target = directionalSnap(prevIdx, curX, 1);
+  snapTween = gsap.to(track, {
+    x: target, duration: 0.5, ease: 'power2.out',
+    onComplete: () => { snapTween = null; haptic(); resumeAutoScrollAfterDelay(); }
+  });
 });
 document.getElementById('marqueeRight').addEventListener('click', () => {
-  pauseAutoScroll();
-  killMomentum();
-  const cur = parseFloat(gsap.getProperty(track, 'x')) || 0;
-  momentumTween = gsap.to(track, { x: cur - getItemWidth(), duration: 0.4, ease: 'power2.out', onComplete: () => { momentumTween = null; resumeAutoScrollAfterDelay(); } });
+  pauseAutoScroll(); killMotion();
+  const curX = parseFloat(gsap.getProperty(track, 'x')) || 0;
+  const curIdx = getCenteredIndex(curX);
+  const nextIdx = (curIdx + 1) % halfCount;
+  const target = directionalSnap(nextIdx, curX, -1);
+  snapTween = gsap.to(track, {
+    x: target, duration: 0.5, ease: 'power2.out',
+    onComplete: () => { snapTween = null; haptic(); resumeAutoScrollAfterDelay(); }
+  });
 });
 
-/* Touch drag/swipe for mobile */
+/* Touch: drag with iOS-style momentum physics + snap-to-center */
 (function() {
-  let startX = 0, startTrackX = 0, isDragging = false, velocity = 0, lastX = 0, lastTime = 0;
+  let startX = 0, startTrackX = 0, isDragging = false;
+  let velocity = 0, lastX = 0, lastTime = 0;
   let touchStartItem = null;
 
   track.addEventListener('touchstart', e => {
@@ -790,8 +853,9 @@ document.getElementById('marqueeRight').addEventListener('click', () => {
     startTrackX = parseFloat(gsap.getProperty(track, 'x')) || 0;
     lastX = startX;
     lastTime = Date.now();
+    velocity = 0;
     pauseAutoScroll();
-    killMomentum();
+    killMotion();
   }, { passive: true });
 
   track.addEventListener('touchmove', e => {
@@ -801,7 +865,9 @@ document.getElementById('marqueeRight').addEventListener('click', () => {
     if (Math.abs(dx) > 8) wasDragged = true;
     const now = Date.now();
     const dt = now - lastTime || 1;
-    velocity = (x - lastX) / dt;
+    /* Exponential moving average for smoother velocity tracking */
+    const instantV = (x - lastX) / dt;
+    velocity = velocity * 0.65 + instantV * 0.35;
     lastX = x;
     lastTime = now;
     gsap.set(track, { x: startTrackX + dx });
@@ -812,7 +878,6 @@ document.getElementById('marqueeRight').addEventListener('click', () => {
     isDragging = false;
 
     if (!wasDragged) {
-      /* Tap, not swipe: open lightbox on the element under the finger at touchstart */
       if (touchStartItem && touchStartItem.dataset.index != null) {
         openLightbox(parseInt(touchStartItem.dataset.index));
       }
@@ -820,14 +885,30 @@ document.getElementById('marqueeRight').addEventListener('click', () => {
       return;
     }
 
-    /* Swipe: apply momentum then schedule resume */
-    const mom = velocity * 180;
-    const currentX = parseFloat(gsap.getProperty(track, 'x')) || 0;
+    const curX = parseFloat(gsap.getProperty(track, 'x')) || 0;
+    const absV = Math.abs(velocity);
+
+    /* Gentle release: just snap, no coast */
+    if (absV < 0.15) {
+      snapToNearest(curX, resumeAutoScrollAfterDelay);
+      return;
+    }
+
+    /* Momentum: v^2 proportional distance (constant deceleration, like native iOS scroll).
+       Hard flick = long coast across many images. Gentle flick = short coast to neighbor. */
+    const sign = velocity > 0 ? 1 : -1;
+    const coast = sign * Math.min(absV * absV * 800, window.innerWidth * 3);
+    const dur = Math.min(Math.max(absV * 1.5, 0.35), 1.8);
+
     momentumTween = gsap.to(track, {
-      x: currentX + mom,
-      duration: Math.min(Math.abs(mom) / 500, 1.2),
+      x: curX + coast,
+      duration: dur,
       ease: 'power3.out',
-      onComplete: () => { momentumTween = null; resumeAutoScrollAfterDelay(); }
+      onComplete: () => {
+        momentumTween = null;
+        const afterX = parseFloat(gsap.getProperty(track, 'x')) || 0;
+        snapToNearest(afterX, resumeAutoScrollAfterDelay);
+      }
     });
   }, { passive: true });
 })();
