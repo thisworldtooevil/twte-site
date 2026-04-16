@@ -167,7 +167,7 @@ export function BrandIdentity() {
                 onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--red-bright)'; e.currentTarget.style.borderColor = 'var(--red-bright)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--red)'; e.currentTarget.style.borderColor = 'var(--red)'; }}
               >
-                Get In Touch
+                Get in Touch
               </MagneticButton>
 
               <MagneticButton
