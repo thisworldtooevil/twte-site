@@ -90,6 +90,24 @@ h1{
   color:#D4CFC8;text-shadow:0 1px 8px rgba(10,10,10,0.9);
   pointer-events:none;
 }
+.tile:has(.sound) video{cursor:pointer}
+.sound{
+  position:absolute;right:10px;bottom:8px;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(10,10,10,0.55);
+  border:1px solid rgba(242,237,230,0.18);
+  color:#D4CFC8;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .25s ease,border-color .25s ease,background .25s ease;
+}
+.sound::before{content:'';position:absolute;inset:-7px}
+.sound svg{width:14px;height:14px;display:block}
+.sound .on{display:none}
+.sound[data-sound="on"]{color:#F2EDE6;border-color:#D95050;background:rgba(10,10,10,0.7)}
+.sound[data-sound="on"] .on{display:block}
+.sound[data-sound="on"] .off{display:none}
+@media(hover:hover){.sound:hover{color:#F2EDE6;border-color:#D95050}}
 
 footer.book{
   border-top:1px solid #2A2A2A;
@@ -183,6 +201,19 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
   var FEATURED_COUNT = 1;
   var TPE_COUNT = 8;
 
+  /* Clips whose web file has no audio track get no speaker. Remove an entry
+     once that clip is re-encoded with sound. */
+  var SILENT = { 'retail-01': true };
+
+  /* Speaker icon: .off (crossed) shows while muted, .on (waves) while audible. */
+  var SPEAKER_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+    '<path d="M4 9h4l5-4v14l-5-4H4z"/>' +
+    '<g class="off"><path d="M17 9.5l5 5M22 9.5l-5 5"/></g>' +
+    '<g class="on"><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/></g>' +
+    '</svg>';
+
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
   function buildTiles(container, count, prefix, labelFor) {
@@ -220,6 +251,16 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
 
     tile.appendChild(v);
     tile.appendChild(tag);
+
+    if (!SILENT[prefix + '-' + id]) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sound';
+      btn.dataset.label = label;
+      btn.innerHTML = SPEAKER_SVG;
+      tile.appendChild(btn);
+    }
+
     grid.appendChild(tile);
   }
 
@@ -266,6 +307,46 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
     v.addEventListener('loadeddata', function () { tryPlay(v); });
     v.addEventListener('canplay', function () { tryPlay(v); });
   });
+
+  /* One-at-a-time audio. Every clip stays muted until tapped; tapping one
+     unmutes it and mutes the rest, tapping the audible clip mutes it again.
+     The speaker is a native <button>, so Enter and Space toggle it too. */
+  function soundBtn(v) { return v.parentNode.querySelector('.sound'); }
+
+  function setSound(v, on) {
+    v.muted = !on;
+    var b = soundBtn(v);
+    b.dataset.sound = on ? 'on' : 'off';
+    b.setAttribute('aria-label', (on ? 'Mute ' : 'Unmute ') + b.dataset.label);
+  }
+
+  function toggleSound(v) {
+    if (!v.muted) { setSound(v, false); return; }
+    soundVids.forEach(function (o) { if (o !== v && !o.muted) setSound(o, false); });
+    setSound(v, true);
+    var p = v.play();
+    if (p && typeof p.catch === 'function') {
+      /* If the browser refuses playback with sound, fall back to muted. */
+      p.catch(function () { setSound(v, false); tryPlay(v); });
+    }
+  }
+
+  var soundVids = vids.filter(function (v) { return !!soundBtn(v); });
+
+  soundVids.forEach(function (v) {
+    setSound(v, false);
+    v.parentNode.addEventListener('click', function () { toggleSound(v); });
+  });
+
+  /* Re-mute any audible clip once less than half of it is on screen. */
+  if ('IntersectionObserver' in window) {
+    var aio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.intersectionRatio < 0.5 && !e.target.muted) setSound(e.target, false);
+      });
+    }, { threshold: [0, 0.5] });
+    soundVids.forEach(function (v) { aio.observe(v); });
+  }
 
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden) { vids.forEach(function (v) { if (v.src) tryPlay(v); }); }
