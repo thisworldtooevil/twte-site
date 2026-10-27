@@ -203,7 +203,7 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
 
   /* Clips whose web file has no audio track get no speaker. Remove an entry
      once that clip is re-encoded with sound. */
-  var SILENT = {};
+  var SILENT = { 'tpe-08': true };
 
   /* Speaker icon: .off (crossed) shows while muted, .on (waves) while audible. */
   var SPEAKER_SVG =
