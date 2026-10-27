@@ -164,17 +164,17 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
   <div class="rule"></div>
 
   <section class="work">
+    <div class="section-label">Total Product Expo</div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="work">
     <div class="section-label">Cannabis retail</div>
     <div class="grid" id="featured">
       <!-- Featured reels. Room for 3 more: drop the encoded files in public/retail/
            as retail-02.mp4 + retail-02.jpg (and 03, 04), then raise FEATURED_COUNT
            in the script below. A full row is 4 across at desktop. -->
     </div>
-  </section>
-
-  <section class="work">
-    <div class="section-label">Total Product Expo</div>
-    <div class="grid" id="grid"></div>
   </section>
 
   <footer class="book">
@@ -203,7 +203,7 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
 
   /* Clips whose web file has no audio track get no speaker. Remove an entry
      once that clip is re-encoded with sound. */
-  var SILENT = { 'retail-01': true };
+  var SILENT = {};
 
   /* Speaker icon: .off (crossed) shows while muted, .on (waves) while audible. */
   var SPEAKER_SVG =
