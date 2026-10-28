@@ -3,6 +3,7 @@ import { SplitTextReveal } from '../animation/SplitTextReveal';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { getLenis } from '../../hooks/useLenis';
+import { announceContactArrival } from '../../links';
 
 export function BrandIdentity() {
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -148,7 +149,7 @@ export function BrandIdentity() {
             >
               <MagneticButton
                 href="#contact"
-                onClick={(e) => { e.preventDefault(); scrollTo('#contact'); }}
+                onClick={(e) => { e.preventDefault(); announceContactArrival(); scrollTo('#contact'); }}
                 style={{
                   display: 'inline-block',
                   padding: '14px 36px',

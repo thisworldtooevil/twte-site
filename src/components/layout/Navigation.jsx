@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { getLenis } from '../../hooks/useLenis';
-import { PROOF_CONTACT_HREF } from '../../links';
+import { PROOF_CONTACT_HREF, announceContactArrival } from '../../links';
 
 const linkStyle = {
   fontFamily: "'Space Mono', monospace",
@@ -108,7 +108,7 @@ export function Navigation({ page = 'home' }) {
         <MagneticButton
           href={onHome ? '#contact' : PROOF_CONTACT_HREF}
           className="nav-cta"
-          onClick={onHome ? (e) => { e.preventDefault(); scrollTo('#contact'); } : undefined}
+          onClick={onHome ? (e) => { e.preventDefault(); announceContactArrival(); scrollTo('#contact'); } : undefined}
           style={{
             ...linkStyle,
             transition: 'color 0.3s, border-color 0.3s',

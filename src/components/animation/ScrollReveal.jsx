@@ -13,6 +13,8 @@ export function ScrollReveal({
   className,
   style,
   as = 'div',
+  // Skip the reveal and show the content right away (no fade, no delay).
+  show = false,
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-12% 0px' });
@@ -30,15 +32,15 @@ export function ScrollReveal({
       className={className}
       style={style}
       onFocus={focused ? undefined : () => setFocused(true)}
-      initial={reduced ? {} : { opacity: 0, y, x, scale, rotateX }}
+      initial={reduced || show ? {} : { opacity: 0, y, x, scale, rotateX }}
       animate={
-        reduced || inView || focused
+        reduced || show || inView || focused
           ? { opacity: 1, y: 0, x: 0, scale: 1, rotateX: 0 }
           : { opacity: 0, y, x, scale, rotateX }
       }
       transition={{
-        duration: reduced ? 0 : duration,
-        delay: reduced ? 0 : delay,
+        duration: reduced || show ? 0 : duration,
+        delay: reduced || show ? 0 : delay,
         ease: [0.16, 1, 0.3, 1],
       }}
     >

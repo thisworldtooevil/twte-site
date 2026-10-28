@@ -5,7 +5,7 @@ import { SectionLabel } from '../layout/Section';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useInView } from 'motion/react';
-import { FROM_PARAM, FROM_PROOF } from '../../links';
+import { CONTACT_ARRIVE_EVENT, FROM_PARAM, FROM_PROOF } from '../../links';
 
 const labelText = {
   display: 'block',
@@ -67,6 +67,20 @@ export function Contact() {
   const headingInView = useInView(headingRef, { once: true, margin: '-25% 0px' });
   const [needs, setNeeds] = useState([]);
   const [source] = useState(pageSource);
+
+  // Arriving through #contact (a link from /proof, a nav or hero button, a
+  // shared link) shows the whole form at once. Scrolling here keeps the fade.
+  const [arrived, setArrived] = useState(() => typeof window !== 'undefined' && window.location.hash === '#contact');
+  useEffect(() => {
+    const arrive = () => setArrived(true);
+    const onHash = () => { if (window.location.hash === '#contact') arrive(); };
+    window.addEventListener(CONTACT_ARRIVE_EVENT, arrive);
+    window.addEventListener('hashchange', onHash);
+    return () => {
+      window.removeEventListener(CONTACT_ARRIVE_EVENT, arrive);
+      window.removeEventListener('hashchange', onHash);
+    };
+  }, []);
 
   // 'idle' | 'sending' | 'sent' | 'error'
   const [status, setStatus] = useState('idle');
@@ -165,7 +179,7 @@ export function Contact() {
             Book a discovery.
           </h2>
 
-          <ScrollReveal>
+          <ScrollReveal show={arrived}>
             <p style={{
               fontSize: 14,
               lineHeight: 1.75,
@@ -206,7 +220,7 @@ export function Contact() {
           <input type="hidden" name="needs" value={needs.join(', ')} />
           <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
 
-          <ScrollReveal delay={0}>
+          <ScrollReveal show={arrived} delay={0}>
             <label style={{ display: 'block', marginBottom: 24 }}>
               <span style={labelText}>Name *</span>
               <input
@@ -221,7 +235,7 @@ export function Contact() {
             </label>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.1}>
+          <ScrollReveal show={arrived} delay={0.1}>
             <label style={{ display: 'block', marginBottom: 24 }}>
               <span style={labelText}>Email *</span>
               <input
@@ -235,7 +249,7 @@ export function Contact() {
             </label>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.2}>
+          <ScrollReveal show={arrived} delay={0.2}>
             <label style={{ display: 'block', marginBottom: 32 }}>
               <span style={labelText}>Phone</span>
               <input
@@ -248,7 +262,7 @@ export function Contact() {
             </label>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.3}>
+          <ScrollReveal show={arrived} delay={0.3}>
             <fieldset style={{ border: 'none', marginBottom: 32 }}>
               <legend style={{ ...labelText, width: '100%', marginBottom: 14 }}>What do you need?</legend>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
@@ -266,7 +280,7 @@ export function Contact() {
             </fieldset>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.4}>
+          <ScrollReveal show={arrived} delay={0.4}>
             <label style={{ display: 'block', marginBottom: 32 }}>
               <span style={labelText}>Tell me a bit more</span>
               <textarea
@@ -279,7 +293,7 @@ export function Contact() {
             </label>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.5}>
+          <ScrollReveal show={arrived} delay={0.5}>
             <MagneticButton
               as="button"
               type="submit"
@@ -317,7 +331,7 @@ export function Contact() {
         </form>
       )}
 
-      <ScrollReveal style={{ marginTop: 32 }}>
+      <ScrollReveal show={arrived} style={{ marginTop: 32 }}>
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
           <MagneticButton
             href="https://instagram.com/thisworldtooevil"
