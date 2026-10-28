@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
@@ -17,6 +17,10 @@ export function ScrollReveal({
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-12% 0px' });
   const reduced = useReducedMotion();
+  // Keyboard focus can land inside before the scroll trigger fires (for
+  // example a field near the bottom edge). Reveal on focus so nothing
+  // focusable is ever invisible.
+  const [focused, setFocused] = useState(false);
 
   const Component = motion[as] || motion.div;
 
@@ -25,9 +29,10 @@ export function ScrollReveal({
       ref={ref}
       className={className}
       style={style}
+      onFocus={focused ? undefined : () => setFocused(true)}
       initial={reduced ? {} : { opacity: 0, y, x, scale, rotateX }}
       animate={
-        reduced || inView
+        reduced || inView || focused
           ? { opacity: 1, y: 0, x: 0, scale: 1, rotateX: 0 }
           : { opacity: 0, y, x, scale, rotateX }
       }

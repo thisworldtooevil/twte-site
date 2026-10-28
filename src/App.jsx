@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useLenis } from './hooks/useLenis';
+import { useContactDeepLink } from './hooks/useContactDeepLink';
 import { LogoLoader } from './components/ui/LogoLoader';
 import { CustomCursor } from './components/ui/CustomCursor';
 import { ScrollProgress } from './components/ui/ScrollProgress';
@@ -16,11 +17,15 @@ import { HowItWorks } from './components/sections/HowItWorks';
 import { Contact } from './components/sections/Contact';
 import { photos } from './data/photos';
 
+// A visitor headed straight for the form skips the logo intro.
+const arrivingAtContact = typeof window !== 'undefined' && window.location.hash === '#contact';
+
 export default function App() {
-  const [loaderDone, setLoaderDone] = useState(false);
+  const [loaderDone, setLoaderDone] = useState(arrivingAtContact);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useLenis();
+  useContactDeepLink();
 
   const handleLoaderComplete = useCallback(() => {
     setLoaderDone(true);
@@ -43,7 +48,7 @@ export default function App() {
 
   return (
     <>
-      <LogoLoader onComplete={handleLoaderComplete} />
+      {!arrivingAtContact && <LogoLoader onComplete={handleLoaderComplete} />}
       <CustomCursor />
       <ScrollProgress />
       <Watermark />

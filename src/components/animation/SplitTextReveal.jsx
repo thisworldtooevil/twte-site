@@ -4,6 +4,7 @@ import { useSplitText } from '../../hooks/useSplitText';
 export function SplitTextReveal({
   children,
   as: Tag = 'h2',
+  id,
   className,
   style,
   type = 'words',
@@ -19,7 +20,7 @@ export function SplitTextReveal({
   useSplitText(ref, { type, mask, stagger, duration, yPercent, ease, delay, y: undefined });
 
   return (
-    <Tag ref={ref} className={className} style={style}>
+    <Tag ref={ref} id={id} className={className} style={style}>
       {children}
     </Tag>
   );
