@@ -12,6 +12,22 @@ export function Footer() {
       <div style={{ opacity: 0.3 }}>
         <img src="/images/logo-nav.png" alt="TWTE" width="28" height="28" style={{ display: 'block' }} />
       </div>
+      <a
+        href="/proof/"
+        style={{
+          fontFamily: "'Space Mono', monospace",
+          fontSize: 10,
+          letterSpacing: 2,
+          textTransform: 'uppercase',
+          color: 'var(--grey-text)',
+          padding: '14px 0',
+          transition: 'color 0.3s',
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--red-text)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--grey-text)'; }}
+      >
+        Proof
+      </a>
       <div
         style={{
           fontFamily: "'Space Mono', monospace",

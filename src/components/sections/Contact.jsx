@@ -1,15 +1,59 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ScrollReveal } from '../animation/ScrollReveal';
-import { SplitTextReveal } from '../animation/SplitTextReveal';
 import { SectionLabel } from '../layout/Section';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useInView } from 'motion/react';
 
+const labelText = {
+  display: 'block',
+  fontFamily: "'Space Mono', monospace",
+  fontSize: 11,
+  letterSpacing: 2,
+  textTransform: 'uppercase',
+  color: 'var(--grey-text)',
+  marginBottom: 8,
+};
+
+const fieldInput = {
+  width: '100%',
+  background: 'transparent',
+  border: 'none',
+  borderBottom: '1px solid var(--grey)',
+  padding: '12px 0',
+  fontFamily: "'Space Mono', monospace",
+  fontSize: 14,
+  color: 'var(--cream)',
+  outline: 'none',
+  transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
+};
+
+const NEEDS = [
+  'Content and video',
+  'Ads and lead generation',
+  'Website',
+  'Brand and creative direction',
+  'Event or artist coverage',
+  'Not sure yet',
+];
+
+// Visitors sent from /proof arrive as /?from=proof#contact. The query
+// survives a refresh, so the source stays right on a hard reload too.
+function pageSource() {
+  if (typeof window === 'undefined') return 'home';
+  return new URLSearchParams(window.location.search).get('from') === 'proof' ? 'proof' : 'home';
+}
+
 export function Contact() {
   const isMobile = useMediaQuery('(max-width: 900px)');
   const headingRef = useRef(null);
   const headingInView = useInView(headingRef, { once: true, margin: '-25% 0px' });
+  const [needs, setNeeds] = useState([]);
+  const [source] = useState(pageSource);
+
+  const toggleNeed = (need) => {
+    setNeeds((cur) => (cur.includes(need) ? cur.filter((n) => n !== need) : [...cur, need]));
+  };
 
   return (
     <section
@@ -58,113 +102,85 @@ export function Contact() {
         <input type="hidden" name="access_key" value="e097a1ac-3e1e-4da4-bc0a-65b1a6741d25" />
         <input type="hidden" name="subject" value="New TWTE Media Inquiry" />
         <input type="hidden" name="redirect" value="https://thisworldtooevil.com#contact" />
+        <input type="hidden" name="source" value={source} />
+        {/* Chips are unnamed checkboxes; their picks post as one readable line. */}
+        <input type="hidden" name="needs" value={needs.join(', ')} />
         <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
 
         <ScrollReveal delay={0}>
           <label style={{ display: 'block', marginBottom: 24 }}>
-            <span style={{
-              display: 'block',
-              fontFamily: "'Space Mono', monospace",
-              fontSize: 11,
-              letterSpacing: 2,
-              textTransform: 'uppercase',
-              color: 'var(--grey-text)',
-              marginBottom: 8,
-            }}>
-              Name *
-            </span>
+            <span style={labelText}>Name *</span>
             <input
+              id="contact-name"
               className="form-input"
               type="text"
               name="name"
               required
               autoComplete="name"
-              style={{
-                width: '100%',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: '1px solid var(--grey)',
-                padding: '12px 0',
-                fontFamily: "'Space Mono', monospace",
-                fontSize: 14,
-                color: 'var(--cream)',
-                outline: 'none',
-                transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
-              }}
+              style={fieldInput}
             />
           </label>
         </ScrollReveal>
 
         <ScrollReveal delay={0.1}>
           <label style={{ display: 'block', marginBottom: 24 }}>
-            <span style={{
-              display: 'block',
-              fontFamily: "'Space Mono', monospace",
-              fontSize: 11,
-              letterSpacing: 2,
-              textTransform: 'uppercase',
-              color: 'var(--grey-text)',
-              marginBottom: 8,
-            }}>
-              Email *
-            </span>
+            <span style={labelText}>Email *</span>
             <input
               className="form-input"
               type="email"
               name="email"
               required
               autoComplete="email"
-              style={{
-                width: '100%',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: '1px solid var(--grey)',
-                padding: '12px 0',
-                fontFamily: "'Space Mono', monospace",
-                fontSize: 14,
-                color: 'var(--cream)',
-                outline: 'none',
-                transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
-              }}
+              style={fieldInput}
             />
           </label>
         </ScrollReveal>
 
         <ScrollReveal delay={0.2}>
           <label style={{ display: 'block', marginBottom: 32 }}>
-            <span style={{
-              display: 'block',
-              fontFamily: "'Space Mono', monospace",
-              fontSize: 11,
-              letterSpacing: 2,
-              textTransform: 'uppercase',
-              color: 'var(--grey-text)',
-              marginBottom: 8,
-            }}>
-              Phone
-            </span>
+            <span style={labelText}>Phone</span>
             <input
               className="form-input"
               type="tel"
               name="phone"
               autoComplete="tel"
-              style={{
-                width: '100%',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: '1px solid var(--grey)',
-                padding: '12px 0',
-                fontFamily: "'Space Mono', monospace",
-                fontSize: 14,
-                color: 'var(--cream)',
-                outline: 'none',
-                transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
-              }}
+              style={fieldInput}
             />
           </label>
         </ScrollReveal>
 
         <ScrollReveal delay={0.3}>
+          <fieldset style={{ border: 'none', marginBottom: 32 }}>
+            <legend style={{ ...labelText, width: '100%', marginBottom: 14 }}>What do you need?</legend>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+              {NEEDS.map((need) => (
+                <label key={need} className="need-chip">
+                  <input
+                    type="checkbox"
+                    checked={needs.includes(need)}
+                    onChange={() => toggleNeed(need)}
+                  />
+                  <span>{need}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.4}>
+          <label style={{ display: 'block', marginBottom: 32 }}>
+            <span style={labelText}>Tell me a bit more</span>
+            <textarea
+              className="form-input"
+              name="message"
+              rows={4}
+              placeholder="Your business or project, a link, what you're hoping changes."
+              style={{ ...fieldInput, resize: 'vertical', lineHeight: 1.7, display: 'block' }}
+            />
+          </label>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.5}>
           <MagneticButton
             as="button"
             type="submit"

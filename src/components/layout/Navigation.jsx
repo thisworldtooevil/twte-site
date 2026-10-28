@@ -3,7 +3,20 @@ import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { getLenis } from '../../hooks/useLenis';
 
-export function Navigation() {
+const linkStyle = {
+  fontFamily: "'Space Mono', monospace",
+  fontSize: 11,
+  letterSpacing: 2,
+  textTransform: 'uppercase',
+  color: 'var(--cream-dim)',
+  transition: 'color 0.3s',
+  textDecoration: 'none',
+};
+
+// `page` is 'home' (the single-page site) or 'proof'. Off the homepage the
+// links leave the page instead of scrolling within it.
+export function Navigation({ page = 'home' }) {
+  const onHome = page === 'home';
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -63,39 +76,52 @@ export function Navigation() {
       }}
     >
       <a
-        href="#"
-        aria-label="TWTE Media, return to top"
-        onClick={(e) => { e.preventDefault(); scrollTo('#main'); }}
+        href={onHome ? '#' : '/'}
+        aria-label={onHome ? 'TWTE Media, return to top' : 'TWTE Media, home'}
+        onClick={onHome ? (e) => { e.preventDefault(); scrollTo('#main'); } : undefined}
         style={{ display: 'block' }}
       >
         <img src="/images/logo-nav.png" alt="TWTE" width="44" height="44" style={{ display: 'block' }} />
       </a>
 
-      <MagneticButton
-        href="#contact"
-        className="nav-cta"
-        onClick={(e) => { e.preventDefault(); scrollTo('#contact'); }}
-        style={{
-          fontFamily: "'Space Mono', monospace",
-          fontSize: 11,
-          letterSpacing: 2,
-          textTransform: 'uppercase',
-          color: 'var(--cream-dim)',
-          transition: 'color 0.3s, border-color 0.3s',
-          textDecoration: 'none',
-          ...(isMobile ? {
-            border: '1px solid rgba(255,255,255,0.25)',
-            padding: '12px 20px',
+      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 18 : 40 }}>
+        <a
+          href="/proof/"
+          aria-current={page === 'proof' ? 'page' : undefined}
+          style={{
+            ...linkStyle,
+            color: page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)',
             minHeight: 44,
             display: 'inline-flex',
             alignItems: 'center',
-          } : {}),
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--red-text)'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--cream-dim)'; }}
-      >
-        Get in Touch
-      </MagneticButton>
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--red-text)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)'; }}
+        >
+          Proof
+        </a>
+
+        <MagneticButton
+          href={onHome ? '#contact' : '/?from=proof#contact'}
+          className="nav-cta"
+          onClick={onHome ? (e) => { e.preventDefault(); scrollTo('#contact'); } : undefined}
+          style={{
+            ...linkStyle,
+            transition: 'color 0.3s, border-color 0.3s',
+            ...(isMobile ? {
+              border: '1px solid rgba(255,255,255,0.25)',
+              padding: '12px 20px',
+              minHeight: 44,
+              display: 'inline-flex',
+              alignItems: 'center',
+            } : {}),
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--red-text)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--cream-dim)'; }}
+        >
+          Get in Touch
+        </MagneticButton>
+      </div>
     </nav>
   );
 }
