@@ -36,13 +36,16 @@ a{color:inherit;text-decoration:none}
 /* ── CUSTOM CURSOR ── */
 .cursor-ring.hover{width:64px;height:64px;border-color:var(--red-bright)}
 .cursor-ring.marquee-hover{width:80px;height:80px;border-color:var(--cream)}
-@media(hover:none){.cursor-ring{display:none!important}}
+@media not ((hover:hover) and (pointer:fine)){.cursor-ring,.cursor-dot{display:none!important}}
 
 /* ── FOCUS STATES ── */
 :focus-visible{outline:2px solid var(--red-text);outline-offset:4px}
 .hero-btn:focus-visible,.inquire-btn:focus-visible,.contact-btn:focus-visible,.nav-cta:focus-visible,.form-submit:focus-visible{outline:2px solid var(--cream);outline-offset:4px}
 .form-input:focus-visible{border-color:var(--cream);box-shadow:0 1px 0 0 var(--cream);outline:none}
 .form-input::placeholder{color:var(--grey);opacity:1}
+/* Submit hover lives in CSS so a tap on a phone can't leave it stuck red. */
+.form-submit{background:transparent;border:1px solid var(--red-ui)}
+@media(hover:hover){.form-submit:not(:disabled):hover{background:var(--red);border-color:var(--red)}}
 
 /* ── NEED CHIPS (contact form multi-select, styled like .contact-btn) ── */
 .need-chip{position:relative;display:inline-flex;cursor:pointer}

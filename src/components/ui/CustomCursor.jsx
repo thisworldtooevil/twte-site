@@ -1,11 +1,15 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
+const FINE_POINTER = '(hover: hover) and (pointer: fine)';
+
 export function CustomCursor() {
   const dotRef = useRef(null);
   const ringRef = useRef(null);
   const reduced = useReducedMotion();
-  const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
+  // Only a real mouse or trackpad gets the custom cursor. Phones, tablets and
+  // anything whose main input can't hover or point finely never render it.
+  const isTouchDevice = typeof window !== 'undefined' && !window.matchMedia(FINE_POINTER).matches;
 
   const ringPos = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
   const rafRef = useRef(null);
@@ -115,6 +119,7 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
+        className="cursor-dot"
         aria-hidden="true"
         style={{
           position: 'fixed',

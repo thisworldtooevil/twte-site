@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getLenis } from '../../hooks/useLenis';
 import { ScrollReveal } from '../animation/ScrollReveal';
 import { SectionLabel } from '../layout/Section';
 import { MagneticButton } from '../ui/MagneticButton';
@@ -37,6 +38,19 @@ const NEEDS = [
   'Not sure yet',
 ];
 
+const WEB3FORMS_URL = 'https://api.web3forms.com/submit';
+const ACCESS_KEY = 'e097a1ac-3e1e-4da4-bc0a-65b1a6741d25';
+const CONTACT_EMAIL = 'twte.media@gmail.com';
+
+const bigHeading = {
+  fontFamily: "'job-clarendon', serif",
+  fontWeight: 900,
+  fontStyle: 'italic',
+  fontSize: 'clamp(48px, 6vw, 80px)',
+  lineHeight: 1.1,
+  letterSpacing: 0.5,
+};
+
 // Visitors sent from /proof arrive as /?from=proof#contact. The query
 // survives a refresh, so the source stays right on a hard reload too.
 function pageSource() {
@@ -51,9 +65,59 @@ export function Contact() {
   const [needs, setNeeds] = useState([]);
   const [source] = useState(pageSource);
 
+  // 'idle' | 'sending' | 'sent' | 'error'
+  const [status, setStatus] = useState('idle');
+  const confirmRef = useRef(null);
+
   const toggleNeed = (need) => {
     setNeeds((cur) => (cur.includes(need) ? cur.filter((n) => n !== need) : [...cur, need]));
   };
+
+  // Post in the background so the visitor never leaves the page. On failure
+  // the inputs are untouched, so everything typed is still there.
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (status === 'sending') return;
+    const form = e.currentTarget;
+    const fields = Object.fromEntries(new FormData(form));
+    setStatus('sending');
+    try {
+      const res = await fetch(WEB3FORMS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          ...fields,
+          access_key: ACCESS_KEY,
+          botcheck: form.elements.botcheck.checked,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) { setStatus('sent'); return; }
+      fail(form);
+    } catch {
+      fail(form);
+    }
+  };
+
+  // The disabled button drops keyboard focus while sending; put it back so
+  // a keyboard user can retry straight away.
+  const fail = (form) => {
+    setStatus('error');
+    requestAnimationFrame(() => form.querySelector('.form-submit')?.focus());
+  };
+
+  // Hand focus to the confirmation so screen readers announce it, and keep
+  // it in view now that the taller form is gone.
+  useEffect(() => {
+    if (status !== 'sent' || !confirmRef.current) return;
+    const el = confirmRef.current;
+    el.focus({ preventScroll: true });
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(el, { offset: -160 });
+    else el.scrollIntoView({ block: 'center' });
+  }, [status]);
+
+  const sending = status === 'sending';
 
   return (
     <section
@@ -66,15 +130,10 @@ export function Contact() {
       <h2
         ref={headingRef}
         style={{
-          fontFamily: "'job-clarendon', serif",
-          fontWeight: 900,
-          fontStyle: 'italic',
-          fontSize: 'clamp(48px, 6vw, 80px)',
-          lineHeight: 1.1,
+          ...bigHeading,
           marginBottom: 24,
           color: headingInView ? 'var(--red-text)' : 'transparent',
           WebkitTextStroke: headingInView ? '0px' : '1.5px var(--red-text)',
-          letterSpacing: 0.5,
           transition: 'color 1.2s var(--ease-out-expo), -webkit-text-stroke-width 1.2s var(--ease-out-expo)',
         }}
       >
@@ -93,117 +152,145 @@ export function Contact() {
         </p>
       </ScrollReveal>
 
-      <form
-        className="inquiry-form"
-        action="https://api.web3forms.com/submit"
-        method="POST"
-        style={{ maxWidth: 500, margin: '0 auto' }}
-      >
-        <input type="hidden" name="access_key" value="e097a1ac-3e1e-4da4-bc0a-65b1a6741d25" />
-        <input type="hidden" name="subject" value="New TWTE Media Inquiry" />
-        <input type="hidden" name="redirect" value="https://thisworldtooevil.com#contact" />
-        <input type="hidden" name="source" value={source} />
-        {/* Chips are unnamed checkboxes; their picks post as one readable line. */}
-        <input type="hidden" name="needs" value={needs.join(', ')} />
-        <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
+      {status === 'sent' ? (
+        <div
+          ref={confirmRef}
+          tabIndex={-1}
+          role="status"
+          className="inquiry-confirm"
+          style={{ maxWidth: 500, margin: '0 auto', outline: 'none' }}
+        >
+          <h3 style={{ ...bigHeading, color: 'var(--red-text)', marginBottom: 24 }}>Got it.</h3>
+          <p style={{ fontSize: 14, lineHeight: 1.75, color: 'var(--cream-dim)' }}>
+            I&rsquo;ll be in touch within a day.
+          </p>
+        </div>
+      ) : (
+        <form
+          className="inquiry-form"
+          action={WEB3FORMS_URL}
+          method="POST"
+          onSubmit={onSubmit}
+          aria-busy={sending}
+          style={{ maxWidth: 500, margin: '0 auto' }}
+        >
+          <input type="hidden" name="access_key" value={ACCESS_KEY} />
+          <input type="hidden" name="subject" value="New TWTE Media Inquiry" />
+          <input type="hidden" name="source" value={source} />
+          {/* Chips are unnamed checkboxes; their picks post as one readable line. */}
+          <input type="hidden" name="needs" value={needs.join(', ')} />
+          <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
 
-        <ScrollReveal delay={0}>
-          <label style={{ display: 'block', marginBottom: 24 }}>
-            <span style={labelText}>Name *</span>
-            <input
-              id="contact-name"
-              className="form-input"
-              type="text"
-              name="name"
-              required
-              autoComplete="name"
-              style={fieldInput}
-            />
-          </label>
-        </ScrollReveal>
+          <ScrollReveal delay={0}>
+            <label style={{ display: 'block', marginBottom: 24 }}>
+              <span style={labelText}>Name *</span>
+              <input
+                id="contact-name"
+                className="form-input"
+                type="text"
+                name="name"
+                required
+                autoComplete="name"
+                style={fieldInput}
+              />
+            </label>
+          </ScrollReveal>
 
-        <ScrollReveal delay={0.1}>
-          <label style={{ display: 'block', marginBottom: 24 }}>
-            <span style={labelText}>Email *</span>
-            <input
-              className="form-input"
-              type="email"
-              name="email"
-              required
-              autoComplete="email"
-              style={fieldInput}
-            />
-          </label>
-        </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <label style={{ display: 'block', marginBottom: 24 }}>
+              <span style={labelText}>Email *</span>
+              <input
+                className="form-input"
+                type="email"
+                name="email"
+                required
+                autoComplete="email"
+                style={fieldInput}
+              />
+            </label>
+          </ScrollReveal>
 
-        <ScrollReveal delay={0.2}>
-          <label style={{ display: 'block', marginBottom: 32 }}>
-            <span style={labelText}>Phone</span>
-            <input
-              className="form-input"
-              type="tel"
-              name="phone"
-              autoComplete="tel"
-              style={fieldInput}
-            />
-          </label>
-        </ScrollReveal>
+          <ScrollReveal delay={0.2}>
+            <label style={{ display: 'block', marginBottom: 32 }}>
+              <span style={labelText}>Phone</span>
+              <input
+                className="form-input"
+                type="tel"
+                name="phone"
+                autoComplete="tel"
+                style={fieldInput}
+              />
+            </label>
+          </ScrollReveal>
 
-        <ScrollReveal delay={0.3}>
-          <fieldset style={{ border: 'none', marginBottom: 32 }}>
-            <legend style={{ ...labelText, width: '100%', marginBottom: 14 }}>What do you need?</legend>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
-              {NEEDS.map((need) => (
-                <label key={need} className="need-chip">
-                  <input
-                    type="checkbox"
-                    checked={needs.includes(need)}
-                    onChange={() => toggleNeed(need)}
-                  />
-                  <span>{need}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        </ScrollReveal>
+          <ScrollReveal delay={0.3}>
+            <fieldset style={{ border: 'none', marginBottom: 32 }}>
+              <legend style={{ ...labelText, width: '100%', marginBottom: 14 }}>What do you need?</legend>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+                {NEEDS.map((need) => (
+                  <label key={need} className="need-chip">
+                    <input
+                      type="checkbox"
+                      checked={needs.includes(need)}
+                      onChange={() => toggleNeed(need)}
+                    />
+                    <span>{need}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </ScrollReveal>
 
-        <ScrollReveal delay={0.4}>
-          <label style={{ display: 'block', marginBottom: 32 }}>
-            <span style={labelText}>Tell me a bit more</span>
-            <textarea
-              className="form-input"
-              name="message"
-              rows={4}
-              placeholder="Your business or project, a link, what you're hoping changes."
-              style={{ ...fieldInput, resize: 'vertical', lineHeight: 1.7, display: 'block' }}
-            />
-          </label>
-        </ScrollReveal>
+          <ScrollReveal delay={0.4}>
+            <label style={{ display: 'block', marginBottom: 32 }}>
+              <span style={labelText}>Tell me a bit more</span>
+              <textarea
+                className="form-input"
+                name="message"
+                rows={4}
+                placeholder="Your business or project, a link, what you're hoping changes."
+                style={{ ...fieldInput, resize: 'vertical', lineHeight: 1.7, display: 'block' }}
+              />
+            </label>
+          </ScrollReveal>
 
-        <ScrollReveal delay={0.5}>
-          <MagneticButton
-            as="button"
-            type="submit"
-            className="form-submit"
-            style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: 11,
-              letterSpacing: 3,
-              textTransform: 'uppercase',
-              color: 'var(--cream)',
-              background: 'transparent',
-              border: '1px solid var(--red-ui)',
-              padding: '16px 48px',
-              cursor: 'pointer',
-              transition: 'all 0.35s',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--red)'; e.currentTarget.style.borderColor = 'var(--red)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--red-ui)'; }}
-          >
-            Submit
-          </MagneticButton>
-        </ScrollReveal>
-      </form>
+          <ScrollReveal delay={0.5}>
+            <MagneticButton
+              as="button"
+              type="submit"
+              className="form-submit"
+              disabled={sending}
+              style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: 11,
+                letterSpacing: 3,
+                textTransform: 'uppercase',
+                color: 'var(--cream)',
+                padding: '16px 48px',
+                cursor: sending ? 'wait' : 'pointer',
+                opacity: sending ? 0.6 : 1,
+                transition: 'all 0.35s',
+              }}
+            >
+              {sending ? 'Sending' : 'Submit'}
+            </MagneticButton>
+            <p
+              role="alert"
+              style={{
+                minHeight: 24,
+                marginTop: 20,
+                fontSize: 13,
+                lineHeight: 1.7,
+                color: 'var(--red-text)',
+              }}
+            >
+              {status === 'error' && (
+                <>That didn&rsquo;t send. Try again, or email <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'var(--cream)', borderBottom: '1px solid var(--red)' }}>{CONTACT_EMAIL}</a>.</>
+              )}
+            </p>
+          </ScrollReveal>
+        </form>
+      )}
 
       <ScrollReveal style={{ marginTop: 32 }}>
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
