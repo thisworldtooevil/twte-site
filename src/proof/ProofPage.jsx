@@ -268,7 +268,7 @@ export default function ProofPage() {
             <div className="proof-quotes">
               {data.comments.map((file, i) => (
                 <Reveal as="figure" key={file} className="proof-q" delay={(i % 2) * 0.08}>
-                  <img src={`/images/proof/comments/${file}`} alt={commentsSection.alt} width="900" height={commentsSection.heights[file]} loading="lazy" decoding="async" />
+                  <img src={`/images/proof/comments/${file}`} alt={commentsSection.alts[file]} width="900" height={commentsSection.heights[file]} loading="lazy" decoding="async" />
                 </Reveal>
               ))}
             </div>

@@ -155,7 +155,13 @@ export const commentsSection = {
   label: '05 · What people said',
   title: 'The comments asked for more',
   intro: 'Real comments from the reels, names and photos blurred. Viewers started treating the two leads as a storyline, which is the case for building creator content as a series instead of one-offs.',
-  alt: 'Instagram comment, username and photo blurred',
+  // Transcribed from each screenshot. Names, photos and comment ages stay out.
+  alts: {
+    'comment_reel3_love-story_20.3K.jpg': 'Instagram comment, name and photo blurred: "This feels like a love story unfolding," with a laughing emoji. 20.3K likes.',
+    'comment_reel3_single-mom_13.9K.jpg': 'Instagram comment, name and photo blurred: "\'You\'re a single mom?\' the excitement in her voice," with laughing emojis. 13.9K likes.',
+    'comment_reel1_feel-so-seen_7899.jpg': 'Instagram comment, name and photo blurred, liked by the creator: "\'Yah, and one was discontinued in 2022 so we\'re back to two.\' I FEEL SO SEEN. I want conversations like this," with a crying emoji and a heart. 7,899 likes.',
+    'comment_reel3_ship-them_7026.jpg': 'Instagram comment, name and photo blurred: "As much as i would love to ship them, adult friendships are also a thing." 7,026 likes.',
+  },
   // Intrinsic heights (all 900 wide) so the lazy images reserve their space.
   heights: {
     'comment_reel1_feel-so-seen_7899.jpg': 260,

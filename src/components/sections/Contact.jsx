@@ -150,30 +150,34 @@ export function Contact() {
     >
       <SectionLabel center>Get in touch</SectionLabel>
 
-      <h2
-        ref={headingRef}
-        style={{
-          ...bigHeading,
-          marginBottom: 24,
-          color: headingInView ? 'var(--red-text)' : 'transparent',
-          WebkitTextStroke: headingInView ? '0px' : '1.5px var(--red-text)',
-          transition: 'color 1.2s var(--ease-out-expo), -webkit-text-stroke-width 1.2s var(--ease-out-expo)',
-        }}
-      >
-        Book a discovery.
-      </h2>
+      {status !== 'sent' && (
+        <>
+          <h2
+            ref={headingRef}
+            style={{
+              ...bigHeading,
+              marginBottom: 24,
+              color: headingInView ? 'var(--red-text)' : 'transparent',
+              WebkitTextStroke: headingInView ? '0px' : '1.5px var(--red-text)',
+              transition: 'color 1.2s var(--ease-out-expo), -webkit-text-stroke-width 1.2s var(--ease-out-expo)',
+            }}
+          >
+            Book a discovery.
+          </h2>
 
-      <ScrollReveal>
-        <p style={{
-          fontSize: 14,
-          lineHeight: 1.75,
-          color: 'var(--cream-dim)',
-          maxWidth: 520,
-          margin: '0 auto 48px',
-        }}>
-          Every project starts with a conversation. No pitch decks. No generic proposals. Just a direct call about what you need and whether we are the right fit.
-        </p>
-      </ScrollReveal>
+          <ScrollReveal>
+            <p style={{
+              fontSize: 14,
+              lineHeight: 1.75,
+              color: 'var(--cream-dim)',
+              maxWidth: 520,
+              margin: '0 auto 48px',
+            }}>
+              Every project starts with a conversation. No pitch decks. No generic proposals. Just a direct call about what you need and whether we are the right fit.
+            </p>
+          </ScrollReveal>
+        </>
+      )}
 
       {status === 'sent' ? (
         <div
@@ -183,7 +187,7 @@ export function Contact() {
           className="inquiry-confirm"
           style={{ maxWidth: 500, margin: '0 auto', outline: 'none' }}
         >
-          <h3 style={{ ...bigHeading, color: 'var(--red-text)', marginBottom: 24 }}>Got it.</h3>
+          <h2 style={{ ...bigHeading, color: 'var(--red-text)', marginBottom: 24 }}>Got it.</h2>
           <p style={{ fontSize: 14, lineHeight: 1.75, color: 'var(--cream-dim)' }}>
             I&rsquo;ll be in touch within a day.
           </p>
