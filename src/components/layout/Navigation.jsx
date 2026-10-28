@@ -57,6 +57,8 @@ export function Navigation({ page = 'home' }) {
   return (
     <nav
       aria-label="Primary"
+      // Keyboard focus on a nav link brings a scrolled-away nav back into view.
+      onFocus={() => setHidden(false)}
       style={{
         position: 'fixed',
         top: 0,
