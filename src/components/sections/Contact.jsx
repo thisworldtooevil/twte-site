@@ -5,6 +5,7 @@ import { SectionLabel } from '../layout/Section';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useInView } from 'motion/react';
+import { FROM_PARAM, FROM_PROOF } from '../../links';
 
 const labelText = {
   display: 'block',
@@ -41,6 +42,8 @@ const NEEDS = [
 const WEB3FORMS_URL = 'https://api.web3forms.com/submit';
 const ACCESS_KEY = 'e097a1ac-3e1e-4da4-bc0a-65b1a6741d25';
 const CONTACT_EMAIL = 'twte.media@gmail.com';
+// Past this, show the error so the visitor isn't left on "Sending" forever.
+const SEND_TIMEOUT_MS = 15000;
 
 const bigHeading = {
   fontFamily: "'job-clarendon', serif",
@@ -55,7 +58,7 @@ const bigHeading = {
 // survives a refresh, so the source stays right on a hard reload too.
 function pageSource() {
   if (typeof window === 'undefined') return 'home';
-  return new URLSearchParams(window.location.search).get('from') === 'proof' ? 'proof' : 'home';
+  return new URLSearchParams(window.location.search).get(FROM_PARAM) === FROM_PROOF ? 'proof' : 'home';
 }
 
 export function Contact() {
@@ -68,6 +71,9 @@ export function Contact() {
   // 'idle' | 'sending' | 'sent' | 'error'
   const [status, setStatus] = useState('idle');
   const confirmRef = useRef(null);
+  const formRef = useRef(null);
+  // Status from the last render can lag a fast double press; this can't.
+  const inflight = useRef(false);
 
   const toggleNeed = (need) => {
     setNeeds((cur) => (cur.includes(need) ? cur.filter((n) => n !== need) : [...cur, need]));
@@ -77,10 +83,19 @@ export function Contact() {
   // the inputs are untouched, so everything typed is still there.
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (status === 'sending') return;
+    if (inflight.current) return;
     const form = e.currentTarget;
+    const name = form.elements.name;
+    if (!name.value.trim()) {
+      name.value = '';
+      name.reportValidity();
+      return;
+    }
     const fields = Object.fromEntries(new FormData(form));
+    inflight.current = true;
     setStatus('sending');
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), SEND_TIMEOUT_MS);
     try {
       const res = await fetch(WEB3FORMS_URL, {
         method: 'POST',
@@ -90,21 +105,29 @@ export function Contact() {
           access_key: ACCESS_KEY,
           botcheck: form.elements.botcheck.checked,
         }),
+        signal: ctrl.signal,
       });
       const data = await res.json().catch(() => ({}));
-      if (res.ok && data.success) { setStatus('sent'); return; }
-      fail(form);
-    } catch {
-      fail(form);
+      if (res.ok && data.success) {
+        setStatus('sent');
+      } else {
+        console.error('Inquiry not sent:', res.status, data.message);
+        setStatus('error');
+      }
+    } catch (err) {
+      console.error('Inquiry not sent:', err);
+      setStatus('error');
+    } finally {
+      clearTimeout(timer);
+      inflight.current = false;
     }
   };
 
-  // The disabled button drops keyboard focus while sending; put it back so
-  // a keyboard user can retry straight away.
-  const fail = (form) => {
-    setStatus('error');
-    requestAnimationFrame(() => form.querySelector('.form-submit')?.focus());
-  };
+  // The disabled button drops keyboard focus while sending; once it is
+  // enabled again, put focus back so a keyboard user can retry.
+  useEffect(() => {
+    if (status === 'error') formRef.current?.querySelector('.form-submit')?.focus();
+  }, [status]);
 
   // Hand focus to the confirmation so screen readers announce it, and keep
   // it in view now that the taller form is gone.
@@ -167,14 +190,12 @@ export function Contact() {
         </div>
       ) : (
         <form
+          ref={formRef}
           className="inquiry-form"
-          action={WEB3FORMS_URL}
-          method="POST"
           onSubmit={onSubmit}
           aria-busy={sending}
           style={{ maxWidth: 500, margin: '0 auto' }}
         >
-          <input type="hidden" name="access_key" value={ACCESS_KEY} />
           <input type="hidden" name="subject" value="New TWTE Media Inquiry" />
           <input type="hidden" name="source" value={source} />
           {/* Chips are unnamed checkboxes; their picks post as one readable line. */}

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,8 +14,8 @@ export default defineConfig({
     // GitHub Pages serves it directly on a hard refresh or a direct link.
     rollupOptions: {
       input: {
-        main: resolve(import.meta.dirname, 'index.html'),
-        proof: resolve(import.meta.dirname, 'proof/index.html'),
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        proof: fileURLToPath(new URL('./proof/index.html', import.meta.url)),
       },
     },
   },

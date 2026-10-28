@@ -40,10 +40,12 @@ function Reveal({ children, delay = 0, className, style, as = 'div', ...rest }) 
   );
 }
 
+// The id sits on the heading itself so section aria-labelledby still resolves
+// after SplitText moves the accessible name onto the heading.
 function Heading({ id, children, as = 'h2', className = 'proof-h2' }) {
   return (
-    <SplitTextReveal as={as} className={className} ease="power3.out" duration={1} stagger={0.05}>
-      <span id={id}>{children}</span>
+    <SplitTextReveal as={as} id={id} className={className} ease="power3.out" duration={1} stagger={0.05}>
+      {children}
     </SplitTextReveal>
   );
 }
@@ -82,7 +84,7 @@ export default function ProofPage() {
         <header className="proof-wrap proof-hero">
           <Reveal as="p" className="proof-eyebrow">{hero.eyebrow}</Reveal>
           <SplitTextReveal as="h1" className="proof-h1" ease="power3.out" duration={1.1} stagger={0.06}>
-            Organic builds <em>legitimacy</em>, paid brings leads.
+            {hero.title[0]}<em>{hero.title[1]}</em>{hero.title[2]}
           </SplitTextReveal>
           <Reveal as="p" className="proof-lede" delay={0.1}>{hero.lede}</Reveal>
           <div className="proof-stats">
@@ -264,7 +266,7 @@ export default function ProofPage() {
             <div className="proof-quotes">
               {data.comments.map((file, i) => (
                 <Reveal as="figure" key={file} className="proof-q" delay={(i % 2) * 0.08}>
-                  <img src={`/images/proof/comments/${file}`} alt={commentsSection.alt} width="900" loading="lazy" decoding="async" />
+                  <img src={`/images/proof/comments/${file}`} alt={commentsSection.alt} width="900" height={commentsSection.heights[file]} loading="lazy" decoding="async" />
                 </Reveal>
               ))}
             </div>

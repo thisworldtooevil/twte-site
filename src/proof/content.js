@@ -1,3 +1,5 @@
+import { PROOF_CONTACT_HREF } from '../links';
+
 // Page copy for /proof, transcribed from the approved reference page.
 // Numbers that live in metrics-data.json (hero stats, reels, audience,
 // chart) are read from there; this file holds the prose around them.
@@ -6,6 +8,7 @@
 // color it: 'organic' uses the site's red, 'paid' uses cream.
 
 export const hero = {
+  title: ['Organic builds ', 'legitimacy', ', paid brings leads.'],
   eyebrow: 'Case study · Consumer health app · 14 months · Kameron Lucas, content and strategy',
   lede: "I ran a pre-launch health app's social for fourteen months, from the strategy to the final cut. Its own account data shows both halves of that sentence, and how to stack them.",
   statSides: ['organic', null, 'paid'],
@@ -153,6 +156,13 @@ export const commentsSection = {
   title: 'The comments asked for more',
   intro: 'Real comments from the reels, names and photos blurred. Viewers started treating the two leads as a storyline, which is the case for building creator content as a series instead of one-offs.',
   alt: 'Instagram comment, username and photo blurred',
+  // Intrinsic heights (all 900 wide) so the lazy images reserve their space.
+  heights: {
+    'comment_reel1_feel-so-seen_7899.jpg': 260,
+    'comment_reel3_love-story_20.3K.jpg': 151,
+    'comment_reel3_ship-them_7026.jpg': 168,
+    'comment_reel3_single-mom_13.9K.jpg': 171,
+  },
 };
 
 export const audienceSection = {
@@ -166,7 +176,7 @@ export const cta = {
   intro: 'Content people actually share builds the trust before anyone calls. Paid campaigns turn that trust into booked customers, and both get tracked from day one, so we can see what every dollar brought back.',
   pitch: "If your work is better than the way it shows up online, that gap is the job. Tell me about your business and I'll tell you where I'd start.",
   button: 'Start a conversation',
-  href: '/?from=proof#contact',
+  href: PROOF_CONTACT_HREF,
 };
 
 export const method = {

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { getLenis } from '../../hooks/useLenis';
+import { PROOF_CONTACT_HREF } from '../../links';
 
 const linkStyle = {
   fontFamily: "'Space Mono', monospace",
@@ -17,6 +18,7 @@ const linkStyle = {
 // links leave the page instead of scrolling within it.
 export function Navigation({ page = 'home' }) {
   const onHome = page === 'home';
+  const proofColor = page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)';
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -90,19 +92,19 @@ export function Navigation({ page = 'home' }) {
           aria-current={page === 'proof' ? 'page' : undefined}
           style={{
             ...linkStyle,
-            color: page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)',
+            color: proofColor,
             minHeight: 44,
             display: 'inline-flex',
             alignItems: 'center',
           }}
           onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--red-text)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = proofColor; }}
         >
           Proof
         </a>
 
         <MagneticButton
-          href={onHome ? '#contact' : '/?from=proof#contact'}
+          href={onHome ? '#contact' : PROOF_CONTACT_HREF}
           className="nav-cta"
           onClick={onHome ? (e) => { e.preventDefault(); scrollTo('#contact'); } : undefined}
           style={{

@@ -32,13 +32,14 @@
 .proof-win:hover{border-top-color:var(--red)}
 .proof-win p{font-size:13px;line-height:1.75;color:var(--cream-dim)}
 .proof-win small{font-size:11px;line-height:1.6;color:var(--grey-text);margin-top:auto}
-.proof-receipt-link{align-self:flex-start;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cream);border-bottom:1px solid var(--red);padding:6px 0 2px;transition:color .3s,border-color .3s}
-.proof-receipt-link:hover{color:var(--red-text);border-color:var(--red-text)}
+.proof-receipt-link{align-self:flex-start;display:inline-flex;align-items:flex-end;min-height:44px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cream);padding-bottom:4px;background:linear-gradient(var(--red),var(--red)) left bottom/100% 1px no-repeat;transition:color .3s}
+.proof-receipt-link:hover{color:var(--red-text);background-image:linear-gradient(var(--red-text),var(--red-text))}
 
 /* receipts */
 .proof-rgroup{display:grid;gap:18px;margin-top:56px;scroll-margin-top:96px}
 .proof-rgroup:first-of-type{margin-top:0}
 .proof-rgroup:focus{outline:none}
+.proof-rgroup:focus-visible{outline:2px solid var(--red-text);outline-offset:8px}
 .proof-rgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
 .proof-rc{background:var(--card-bg);border:1px solid var(--rule);display:flex;flex-direction:column;min-width:0;scroll-margin-top:96px}
 .proof-rc.is-wide{grid-column:1/-1}

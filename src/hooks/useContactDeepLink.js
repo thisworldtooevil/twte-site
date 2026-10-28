@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import { getLenis } from './useLenis';
 
 const NAV_OFFSET = -80;
+// After landing, late fonts and images can still push the form down. Keep
+// snapping back to it for this long, unless the visitor starts scrolling.
+const SETTLE_MS = 2000;
 
 // Arriving at /#contact (from /proof, a shared link or a hard refresh)
 // glides to the intake form with Lenis and puts the cursor in Name.
@@ -9,6 +12,35 @@ const NAV_OFFSET = -80;
 export function useContactDeepLink() {
   useEffect(() => {
     let cancelled = false;
+    let stopSettle = () => {};
+
+    // Our glide decides where the page lands, not a restored scroll position.
+    if (window.location.hash === '#contact' && 'scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    const drift = (section) => section.getBoundingClientRect().top + NAV_OFFSET;
+    const snap = (section) => {
+      if (Math.abs(drift(section)) > 4) getLenis()?.scrollTo(section, { offset: NAV_OFFSET, immediate: true });
+    };
+
+    const settle = (section) => {
+      if (typeof ResizeObserver === 'undefined') return;
+      const ro = new ResizeObserver(() => snap(section));
+      const stop = () => {
+        ro.disconnect();
+        clearTimeout(timer);
+        window.removeEventListener('wheel', stop);
+        window.removeEventListener('touchstart', stop);
+        window.removeEventListener('keydown', stop);
+      };
+      const timer = setTimeout(stop, SETTLE_MS);
+      ro.observe(document.body);
+      window.addEventListener('wheel', stop, { passive: true });
+      window.addEventListener('touchstart', stop, { passive: true });
+      window.addEventListener('keydown', stop);
+      stopSettle = stop;
+    };
 
     const go = () => {
       if (cancelled || window.location.hash !== '#contact') return;
@@ -19,10 +51,9 @@ export function useContactDeepLink() {
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const land = () => {
         if (cancelled) return;
-        // Images above can change height mid-glide; correct any drift.
-        const drift = section.getBoundingClientRect().top + NAV_OFFSET;
-        if (Math.abs(drift) > 4) getLenis()?.scrollTo(section, { offset: NAV_OFFSET, immediate: true });
+        snap(section);
         name.focus({ preventScroll: true });
+        settle(section);
       };
 
       const lenis = getLenis();
@@ -44,12 +75,16 @@ export function useContactDeepLink() {
       });
     };
 
-    // Let the first layout settle before measuring the target.
-    const timer = setTimeout(go, 200);
+    // Measure once the web fonts are in, so the target isn't measured on
+    // fallback-font line heights.
+    let timer;
+    const fontsReady = document.fonts?.ready ?? Promise.resolve();
+    fontsReady.then(() => { if (!cancelled) timer = setTimeout(go, 120); });
     window.addEventListener('hashchange', go);
     return () => {
       cancelled = true;
       clearTimeout(timer);
+      stopSettle();
       window.removeEventListener('hashchange', go);
     };
   }, []);
