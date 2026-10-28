@@ -63,7 +63,9 @@ export default function ProofPage() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const lenis = getLenis();
     const land = () => el.focus({ preventScroll: true });
-    if (lenis) lenis.scrollTo(el, { offset: -96, immediate: reduced, onComplete: land });
+    // The 96px clearance for the nav comes from scroll-margin-top in
+    // proof.css, which Lenis honors; no extra offset here.
+    if (lenis) lenis.scrollTo(el, { immediate: reduced, onComplete: land });
     else { el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); land(); }
     history.replaceState(null, '', `#${id}`);
   }, []);
