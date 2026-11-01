@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { getLenis } from '../../hooks/useLenis';
-import { PROOF_CONTACT_HREF, announceContactArrival } from '../../links';
+import { PROOF_CONTACT_HREF, MEDIA_CONTACT_HREF, announceContactArrival } from '../../links';
 
 const linkStyle = {
   fontFamily: "'Space Mono', monospace",
@@ -14,10 +14,11 @@ const linkStyle = {
   textDecoration: 'none',
 };
 
-// `page` is 'home' (the single-page site) or 'proof'. Off the homepage the
-// links leave the page instead of scrolling within it.
+// `page` is 'home' (the single-page site), 'proof' or 'media'. Off the
+// homepage the links leave the page instead of scrolling within it.
 export function Navigation({ page = 'home' }) {
   const onHome = page === 'home';
+  const contactHref = page === 'media' ? MEDIA_CONTACT_HREF : PROOF_CONTACT_HREF;
   const proofColor = page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)';
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -106,7 +107,7 @@ export function Navigation({ page = 'home' }) {
         </a>
 
         <MagneticButton
-          href={onHome ? '#contact' : PROOF_CONTACT_HREF}
+          href={onHome ? '#contact' : contactHref}
           className="nav-cta"
           onClick={onHome ? (e) => { e.preventDefault(); announceContactArrival(); scrollTo('#contact'); } : undefined}
           style={{
