@@ -14,6 +14,9 @@ export function LogoLoader({ onComplete }) {
 
   useEffect(() => {
     if (reduced) {
+      // Reduced motion skips the intro, including if the setting changes
+      // while it plays, so this runs on that change, not just on mount.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDone(true);
       onComplete?.();
       return;

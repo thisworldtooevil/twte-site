@@ -1,5 +1,3 @@
-import { MEDIA_CONTACT_HREF } from '../links';
-
 // Page copy for /media. LOCKED: transcribed verbatim from the approved brief.
 // Do not edit, add to, or reorder. If a line breaks the layout, flag it.
 //
@@ -79,6 +77,6 @@ export const proof = {
 export const close = {
   title: ["Somebody's building your next yard. ", "Make sure it's you."],
   button: 'Book your call',
-  href: MEDIA_CONTACT_HREF,
+  href: '#contact',
   note: "30 minutes on Google Meet. I'll study your page before we talk.",
 };

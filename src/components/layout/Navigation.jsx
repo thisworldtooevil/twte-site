@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { getLenis } from '../../hooks/useLenis';
-import { PROOF_CONTACT_HREF, MEDIA_CONTACT_HREF, announceContactArrival } from '../../links';
+import { PROOF_CONTACT_HREF, announceContactArrival } from '../../links';
 
 const linkStyle = {
   fontFamily: "'Space Mono', monospace",
@@ -15,10 +15,11 @@ const linkStyle = {
 };
 
 // `page` is 'home' (the single-page site), 'proof' or 'media'. Off the
-// homepage the links leave the page instead of scrolling within it.
+// homepage the links leave the page instead of scrolling within it, except
+// Get in Touch on /media, which glides to that page's own form.
 export function Navigation({ page = 'home' }) {
   const onHome = page === 'home';
-  const contactHref = page === 'media' ? MEDIA_CONTACT_HREF : PROOF_CONTACT_HREF;
+  const formOnPage = onHome || page === 'media';
   const proofColor = page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)';
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -107,9 +108,9 @@ export function Navigation({ page = 'home' }) {
         </a>
 
         <MagneticButton
-          href={onHome ? '#contact' : contactHref}
+          href={formOnPage ? '#contact' : PROOF_CONTACT_HREF}
           className="nav-cta"
-          onClick={onHome ? (e) => { e.preventDefault(); announceContactArrival(); scrollTo('#contact'); } : undefined}
+          onClick={formOnPage ? (e) => { e.preventDefault(); announceContactArrival(); scrollTo('#contact'); } : undefined}
           style={{
             ...linkStyle,
             transition: 'color 0.3s, border-color 0.3s',

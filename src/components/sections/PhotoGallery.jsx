@@ -30,6 +30,8 @@ export function PhotoGallery({ photos, onPhotoClick }) {
   }, []);
 
   useEffect(() => {
+    // Measuring the rendered track after mount is the point of this effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     measure();
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);

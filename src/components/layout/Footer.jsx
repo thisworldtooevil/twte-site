@@ -44,7 +44,7 @@ export function Footer() {
           fontFamily: "'Space Mono', monospace",
           fontSize: 10,
           letterSpacing: 2,
-          color: 'var(--grey-dim)',
+          color: 'var(--grey-text)',
         }}
       >
         &copy; 2026 / LOS ANGELES

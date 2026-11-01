@@ -21,7 +21,7 @@ import { photos } from './data/photos';
 const arrivingAtContact = typeof window !== 'undefined' && window.location.hash === '#contact';
 
 export default function App() {
-  const [loaderDone, setLoaderDone] = useState(arrivingAtContact);
+  const [, setLoaderDone] = useState(arrivingAtContact);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useLenis();
