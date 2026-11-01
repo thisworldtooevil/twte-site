@@ -5,7 +5,7 @@ import { SectionLabel } from '../layout/Section';
 import { MagneticButton } from '../ui/MagneticButton';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useInView } from 'motion/react';
-import { CONTACT_ARRIVE_EVENT, FROM_PARAM, FROM_PROOF } from '../../links';
+import { CONTACT_ARRIVE_EVENT, FROM_PARAM, FROM_PROOF, FROM_MEDIA } from '../../links';
 
 const labelText = {
   display: 'block',
@@ -58,7 +58,10 @@ const bigHeading = {
 // survives a refresh, so the source stays right on a hard reload too.
 function pageSource() {
   if (typeof window === 'undefined') return 'home';
-  return new URLSearchParams(window.location.search).get(FROM_PARAM) === FROM_PROOF ? 'proof' : 'home';
+  const from = new URLSearchParams(window.location.search).get(FROM_PARAM);
+  if (from === FROM_PROOF) return 'proof';
+  if (from === FROM_MEDIA) return 'media';
+  return 'home';
 }
 
 export function Contact() {
