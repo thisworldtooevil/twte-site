@@ -4,8 +4,7 @@ export const FROM_PARAM = 'from';
 export const FROM_PROOF = 'proof';
 export const PROOF_CONTACT_HREF = `/?${FROM_PARAM}=${FROM_PROOF}#contact`;
 
-// The /media -> intake form handoff. The form only records 'proof' today, so
-// these arrive logged as 'home' until Contact.jsx learns this value too.
+// The /media -> intake form handoff. The form logs these as 'media'.
 export const FROM_MEDIA = 'media';
 export const MEDIA_CONTACT_HREF = `/?${FROM_PARAM}=${FROM_MEDIA}#contact`;
 

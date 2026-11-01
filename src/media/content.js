@@ -60,14 +60,14 @@ export const plan = [
 
 export const pricing = {
   // Two sentences of one line, set on two lines.
-  lines: ['One month, $5,000.', 'Three months, $6,000.'],
+  lines: ['One month, $5,000.', 'Three months, $6,000 total.'],
   body: 'Ad spend, if any, goes straight from your account to Meta.',
   note: 'Production only: $3,000. One shoot day, 10 finished cuts, ready for your team to post or run.',
 };
 
 export const proof = {
   stats: [
-    { lead: '26.9 million', rest: ' views across six creator reels in two months, $0 in ad spend.' },
+    { lead: '26.9 million', rest: ' views across six creator reels in nine weeks, $0 in ad spend.' },
     { lead: '7,490', rest: ' new followers from that push.' },
     { lead: '38 cents', rest: ' per link click on the paid side.' },
   ],

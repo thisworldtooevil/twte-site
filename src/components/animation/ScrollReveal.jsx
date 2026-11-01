@@ -15,8 +15,6 @@ export function ScrollReveal({
   as = 'div',
   // Skip the reveal and show the content right away (no fade, no delay).
   show = false,
-  // Defaults to the homepage curve (expo out). Pages can pass their own.
-  ease = [0.16, 1, 0.3, 1],
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-12% 0px' });
@@ -43,7 +41,7 @@ export function ScrollReveal({
       transition={{
         duration: reduced || show ? 0 : duration,
         delay: reduced || show ? 0 : delay,
-        ease,
+        ease: [0.16, 1, 0.3, 1],
       }}
     >
       {children}

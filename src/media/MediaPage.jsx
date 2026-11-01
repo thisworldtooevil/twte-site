@@ -10,11 +10,8 @@ import { ScrollReveal } from '../components/animation/ScrollReveal';
 import { SplitTextReveal } from '../components/animation/SplitTextReveal';
 import { hook, pains, bridge, plan, pricing, proof, close } from './content';
 
-// power3.out, the same curve /proof and the #contact glide use.
-const EASE = [0.215, 0.61, 0.355, 1];
-
-// Homepage SplitText settings (words, line mask, 1.1s, 0.06 stagger) on a
-// power3.out curve. Under reduced motion the heading renders as plain text.
+// Homepage SplitText settings, untouched (words, line mask, 1.1s, 0.06
+// stagger, power4.out). Under reduced motion the heading renders as plain text.
 function Heading({ as = 'h2', id, className, children }) {
   const reduced = useReducedMotion();
   if (reduced) {
@@ -22,15 +19,16 @@ function Heading({ as = 'h2', id, className, children }) {
     return <Tag id={id} className={className}>{children}</Tag>;
   }
   return (
-    <SplitTextReveal as={as} id={id} className={className} ease="power3.out">
+    <SplitTextReveal as={as} id={id} className={className}>
       {children}
     </SplitTextReveal>
   );
 }
 
+// Homepage ScrollReveal defaults, untouched (0.8s, 30px rise, expo out).
 function Reveal({ children, delay = 0, ...rest }) {
   return (
-    <ScrollReveal ease={EASE} duration={1} y={24} delay={delay} {...rest}>
+    <ScrollReveal delay={delay} {...rest}>
       {children}
     </ScrollReveal>
   );
