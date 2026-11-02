@@ -11,17 +11,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="manifest" href="/site.webmanifest">
-<title>Landscaping and Home Services Marketing, Los Angeles | TWTE Media</title>
-<meta name="description" content="Install films, ads, and lead screening for landscaping and home services companies in Los Angeles. Get seen, get booked, and win the street.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://thisworldtooevil.com/media/">
-<meta property="og:title" content="Landscaping and Home Services Marketing, Los Angeles | TWTE Media">
-<meta property="og:description" content="Install films, ads, and lead screening for landscaping and home services companies in Los Angeles.">
-<meta property="og:image" content="https://thisworldtooevil.com/images/og-image.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Landscaping and Home Services Marketing, Los Angeles | TWTE Media">
-<meta name="twitter:description" content="Install films, ads, and lead screening for landscaping and home services companies in Los Angeles.">
-<meta name="twitter:image" content="https://thisworldtooevil.com/images/og-image.png">
+<!-- industry-head: title, description and share tags, written at build from the content file -->
 <link rel="preconnect" href="https://use.typekit.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,6 +22,10 @@
 </head>
 <body>
 <div id="root"></div>
-<script type="module" src="/src/media/main.jsx"></script>
+<script type="module">
+import * as content from '/src/industries/landscaping.js';
+import { mountIndustryPage } from '/src/industry/mount.jsx';
+mountIndustryPage(content);
+</script>
 </body>
 </html>
