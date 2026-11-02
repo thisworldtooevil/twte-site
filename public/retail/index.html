@@ -71,6 +71,16 @@ h1{
 }
 .section-label::after{content:'';flex:1;height:1px;background:#2A2A2A}
 .work + .work{margin-top:72px}
+.receipts{
+  display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+  margin-top:40px;padding:16px 40px;
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:#F2EDE6;text-decoration:none;
+  background:#8B2222;border:1px solid #8B2222;
+  transition:background .35s ease,border-color .35s ease;
+}
+@media(hover:hover){.receipts:hover{background:#A53333;border-color:#A53333}}
+.receipts:focus-visible{outline:2px solid #F2EDE6;outline-offset:4px}
 
 .grid{
   display:grid;
@@ -139,6 +149,7 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
 @media(max-width:640px){
   .grid{grid-template-columns:1fr;gap:16px}
   footer.book{padding:40px 0 88px}
+  .receipts{display:flex;width:100%}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -174,6 +185,7 @@ footer.book a:hover{color:#D95050;border-color:#D95050}
            as retail-02.mp4 + retail-02.jpg (and 03, 04), then raise FEATURED_COUNT
            in the script below. A full row is 4 across at desktop. -->
     </div>
+    <a class="receipts" href="/proof/">See the receipts</a>
   </section>
 
   <footer class="book">

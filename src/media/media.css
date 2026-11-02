@@ -54,10 +54,10 @@
 
 /* buttons: same build as the /proof call to action */
 .media-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--cream);background:transparent;border:1px solid var(--red-ui);padding:16px 40px;transition:background .35s,border-color .35s,color .35s}
-.media-btn.is-ghost{border-color:var(--grey-dim)}
+.media-btn.is-solid{background:var(--red);border-color:var(--red)}
 @media(hover:hover){
   .media-btn:hover{background:var(--red);border-color:var(--red)}
-  .media-btn.is-ghost:hover{background:transparent;border-color:var(--cream)}
+  .media-btn.is-solid:hover{background:var(--red-bright);border-color:var(--red-bright)}
 }
 .media-btn:focus-visible{outline:2px solid var(--cream);outline-offset:4px}
 
