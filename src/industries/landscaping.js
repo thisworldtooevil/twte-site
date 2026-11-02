@@ -127,7 +127,7 @@ export const proof = {
 };
 
 export const close = {
-  title: ["Your yards have curb appeal. ", "Give me 30 minutes, and I'll show you how your page earns it too."],
+  title: ["Your installs have curb appeal. Give me 30 minutes, ", "and I'll show you how your page earns it too."],
   button: 'Book your call',
   href: '#contact',
   note: "It's free, and it happens on Google Meet.",

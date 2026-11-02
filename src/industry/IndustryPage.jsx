@@ -178,7 +178,7 @@ export default function IndustryPage({ content }) {
         <section className="media-section media-close" aria-labelledby="m-close">
           <div className="media-wrap">
             <SectionLabel>{L.close}</SectionLabel>
-            <Heading id="m-close" className="media-h2 media-close-h">{close.title[0]}<em>{close.title[1].replace('30 minutes', '30\u00A0minutes')}</em></Heading>
+            <Heading id="m-close" className="media-h2 media-close-h">{close.title[0].replace('30 minutes', '30\u00A0minutes')}<em>{close.title[1].replace('30 minutes', '30\u00A0minutes')}</em></Heading>
             <Reveal className="media-close-cta" delay={0.2}>
               <MagneticButton href={close.href} className="media-btn" onClick={goToForm}>
                 {close.button}

@@ -80,6 +80,8 @@
 /* 7. close */
 .media-close{padding-bottom:96px}
 .media-close-h{font-size:clamp(40px,6.4vw,92px);max-width:16ch;text-wrap:balance}
+/* The close's red half is upright, not italic. */
+.media .media-close-h em{font-style:normal}
 .media-close-cta{margin-top:48px;display:grid;justify-items:start;gap:4px}
 .media-close-cta .media-note{max-width:none}
 
