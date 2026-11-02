@@ -14,12 +14,13 @@ const linkStyle = {
   textDecoration: 'none',
 };
 
-// `page` is 'home' (the single-page site), 'proof' or 'media'. Off the
-// homepage the links leave the page instead of scrolling within it, except
-// Get in Touch on /media, which glides to that page's own form.
+// `page` is 'home' (the single-page site), 'proof' or 'industry' (any
+// industry page, e.g. /landscaping). Off the homepage the links leave the page
+// instead of scrolling within it, except Get in Touch on an industry page,
+// which glides to that page's own form.
 export function Navigation({ page = 'home' }) {
   const onHome = page === 'home';
-  const formOnPage = onHome || page === 'media';
+  const formOnPage = onHome || page === 'industry';
   const proofColor = page === 'proof' ? 'var(--cream)' : 'var(--cream-dim)';
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);

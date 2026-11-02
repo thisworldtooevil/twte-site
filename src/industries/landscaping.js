@@ -1,4 +1,20 @@
-// Page copy for /media. LOCKED: transcribed verbatim from the approved brief.
+// Industry content for /landscaping. Everything specific to this industry
+// lives here; the layout lives in src/industry/IndustryPage.jsx.
+//
+// Page settings: served at /<slug>/, title and description go into the page's
+// <head> at build time, `source` is what form submissions log, `need` is the
+// form's fixed answer, and `labels` name the unheaded sections for screen readers.
+export const page = {
+  slug: 'landscaping',
+  title: 'Landscaping and Home Services Marketing, Los Angeles | TWTE Media',
+  description: 'Install films, ads, and lead screening for landscaping and home services companies in Los Angeles. Get seen, get booked, and win the street.',
+  shareDescription: 'Install films, ads, and lead screening for landscaping and home services companies in Los Angeles.',
+  source: 'landscaping',
+  need: 'Landscaping / home services',
+  labels: { pains: 'What it costs you', pricing: 'Pricing', proof: 'Proof' },
+};
+
+// Page copy below. LOCKED: transcribed verbatim from the approved brief.
 // Do not edit, add to, or reorder. If a line breaks the layout, flag it.
 //
 // Where a line leads with a figure, `lead` is the first part of the same

@@ -12,7 +12,6 @@ import { Footer } from '../components/layout/Footer';
 import { Contact } from '../components/sections/Contact';
 import { ScrollReveal } from '../components/animation/ScrollReveal';
 import { SplitTextReveal } from '../components/animation/SplitTextReveal';
-import { hook, pains, bridge, plan, pricing, proof, close } from './content';
 
 // Homepage SplitText settings, untouched (words, line mask, 1.1s, 0.06
 // stagger, power4.out). Under reduced motion the heading renders as plain text.
@@ -42,9 +41,12 @@ function Note({ children }) {
   return <p className="media-note">{children}</p>;
 }
 
-export default function MediaPage() {
+// The shared industry page. `content` is one industry's content module
+// (src/industries/<slug>.js); nothing in here is specific to an industry.
+export default function IndustryPage({ content }) {
+  const { page, hook, pains, bridge, plan, pricing, proof, close } = content;
   useLenis();
-  // A direct link to /media/#contact glides to the form, as on the homepage.
+  // A direct link to /<slug>/#contact glides to the form, as on the homepage.
   useContactDeepLink();
 
   // Same glide as the homepage nav's Get in Touch: Lenis, 80px nav offset,
@@ -65,7 +67,7 @@ export default function MediaPage() {
       <ScrollProgress />
       <Watermark />
       <a className="skip-link" href="#main">Skip to content</a>
-      <Navigation page="media" />
+      <Navigation page="industry" />
 
       <main id="main" className="media">
         {/* 1. Hook */}
@@ -78,7 +80,7 @@ export default function MediaPage() {
         </header>
 
         {/* 2. Pain cards */}
-        <section className="media-section" aria-label="What it costs you">
+        <section className="media-section" aria-label={page.labels.pains}>
           <div className="media-wrap">
             <ol className="media-pains">
               {pains.map((p, i) => (
@@ -111,7 +113,7 @@ export default function MediaPage() {
         </section>
 
         {/* 5. Pricing */}
-        <section className="media-section" aria-label="Pricing">
+        <section className="media-section" aria-label={page.labels.pricing}>
           <div className="media-wrap">
             <Reveal className="media-price">
               <Heading className="media-h2 media-price-h">
@@ -126,7 +128,7 @@ export default function MediaPage() {
         </section>
 
         {/* 6. Proof */}
-        <section className="media-section" aria-label="Proof">
+        <section className="media-section" aria-label={page.labels.proof}>
           <div className="media-wrap">
             <ul className="media-stats">
               {proof.stats.map((s, i) => (
@@ -163,8 +165,8 @@ export default function MediaPage() {
             or Instagram button, on the page's own column and gutters. */}
         <div className="media-wrap media-form">
           <Contact
-            source="media"
-            need="Landscaping / home services"
+            source={page.source}
+            need={page.need}
             intro={false}
             social={false}
             align="left"
