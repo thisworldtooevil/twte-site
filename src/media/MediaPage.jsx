@@ -137,9 +137,9 @@ export default function MediaPage() {
                 </li>
               ))}
             </ul>
-            <Reveal className="media-proof-line">
+            <Reveal className="media-proof-line callout-panel">
               <p className="media-pull">{proof.line}</p>
-              <MagneticButton href={proof.href} className="media-btn is-solid" target="_blank" rel="noopener noreferrer">
+              <MagneticButton href={proof.href} className="media-btn is-solid is-lg" target="_blank" rel="noopener noreferrer">
                 {proof.button}
               </MagneticButton>
             </Reveal>
@@ -149,7 +149,7 @@ export default function MediaPage() {
         {/* 7. Close */}
         <section className="media-section media-close" aria-labelledby="m-close">
           <div className="media-wrap">
-            <Heading id="m-close" className="media-h2 media-close-h">{close.title[0]}<em>{close.title[1]}</em></Heading>
+            <Heading id="m-close" className="media-h2 media-close-h">{close.title[0]}<em>{close.title[1].replace('30 minutes', '30\u00A0minutes')}</em></Heading>
             <Reveal className="media-close-cta" delay={0.2}>
               <MagneticButton href={close.href} className="media-btn" onClick={goToForm}>
                 {close.button}

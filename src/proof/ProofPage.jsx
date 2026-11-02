@@ -312,7 +312,7 @@ export default function ProofPage() {
             <SectionLabel>{cta.label}</SectionLabel>
             <Heading id="y-h">{cta.title}</Heading>
             <Reveal as="p" className="proof-intro">{cta.intro}</Reveal>
-            <Reveal className="proof-cta">
+            <Reveal className="proof-cta callout-panel">
               <p>{cta.pitch}</p>
               <MagneticButton href={cta.href} className="proof-cta-btn">
                 {cta.button}
