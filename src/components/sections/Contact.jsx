@@ -64,12 +64,18 @@ function pageSource() {
   return 'home';
 }
 
-export function Contact() {
+// Defaults render the homepage section exactly. Other pages can reuse the
+// form alone: `intro={false}` drops the label, heading and intro line,
+// `social={false}` drops the Instagram button, `source` fixes what the
+// submission logs, `need` replaces the need chips with one fixed answer,
+// `align="left"` left-aligns the form, and `style` adjusts the section.
+export function Contact({ intro = true, social = true, source: sourceProp, need: fixedNeed, align = 'center', style } = {}) {
+  const left = align === 'left';
   const isMobile = useMediaQuery('(max-width: 900px)');
   const headingRef = useRef(null);
   const headingInView = useInView(headingRef, { once: true, margin: '-25% 0px' });
   const [needs, setNeeds] = useState([]);
-  const [source] = useState(pageSource);
+  const [source] = useState(() => sourceProp ?? pageSource());
 
   // Arriving through #contact (a link from /proof, a nav or hero button, a
   // shared link) shows the whole form at once. Scrolling here keeps the fade.
@@ -163,11 +169,11 @@ export function Contact() {
     <section
       id="contact"
       aria-label="Contact"
-      style={{ padding: isMobile ? '80px 24px' : '120px 48px', textAlign: 'center' }}
+      style={{ padding: isMobile ? '80px 24px' : '120px 48px', textAlign: left ? 'left' : 'center', ...style }}
     >
-      <SectionLabel center>Get in touch</SectionLabel>
+      {intro && <SectionLabel center>Get in touch</SectionLabel>}
 
-      {status !== 'sent' && (
+      {intro && status !== 'sent' && (
         <>
           <h2
             ref={headingRef}
@@ -202,7 +208,7 @@ export function Contact() {
           tabIndex={-1}
           role="status"
           className="inquiry-confirm"
-          style={{ maxWidth: 500, margin: '0 auto', outline: 'none' }}
+          style={{ maxWidth: 500, margin: left ? 0 : '0 auto', outline: 'none' }}
         >
           <h2 style={{ ...bigHeading, color: 'var(--red-text)', marginBottom: 24 }}>Got it.</h2>
           <p style={{ fontSize: 14, lineHeight: 1.75, color: 'var(--cream-dim)' }}>
@@ -215,12 +221,12 @@ export function Contact() {
           className="inquiry-form"
           onSubmit={onSubmit}
           aria-busy={sending}
-          style={{ maxWidth: 500, margin: '0 auto' }}
+          style={{ maxWidth: 500, margin: left ? 0 : '0 auto' }}
         >
           <input type="hidden" name="subject" value="New TWTE Media Inquiry" />
           <input type="hidden" name="source" value={source} />
           {/* Chips are unnamed checkboxes; their picks post as one readable line. */}
-          <input type="hidden" name="needs" value={needs.join(', ')} />
+          <input type="hidden" name="needs" value={fixedNeed ?? needs.join(', ')} />
           <input type="checkbox" name="botcheck" style={{ display: 'none' }} />
 
           <ScrollReveal show={arrived} delay={0}>
@@ -265,7 +271,7 @@ export function Contact() {
             </label>
           </ScrollReveal>
 
-          <ScrollReveal show={arrived} delay={0.3}>
+          {!fixedNeed && <ScrollReveal show={arrived} delay={0.3}>
             <fieldset style={{ border: 'none', marginBottom: 32 }}>
               <legend style={{ ...labelText, width: '100%', marginBottom: 14 }}>What do you need?</legend>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
@@ -281,7 +287,7 @@ export function Contact() {
                 ))}
               </div>
             </fieldset>
-          </ScrollReveal>
+          </ScrollReveal>}
 
           <ScrollReveal show={arrived} delay={0.4}>
             <label style={{ display: 'block', marginBottom: 32 }}>
@@ -334,7 +340,7 @@ export function Contact() {
         </form>
       )}
 
-      <ScrollReveal show={arrived} style={{ marginTop: 32 }}>
+      {social && <ScrollReveal show={arrived} style={{ marginTop: 32 }}>
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
           <MagneticButton
             href="https://instagram.com/thisworldtooevil"
@@ -357,7 +363,7 @@ export function Contact() {
             Instagram
           </MagneticButton>
         </div>
-      </ScrollReveal>
+      </ScrollReveal>}
     </section>
   );
 }

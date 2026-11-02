@@ -56,15 +56,6 @@ export function CustomCursor() {
     document.addEventListener('mouseenter', onMouseEnter);
     document.addEventListener('mouseleave', onMouseLeave);
 
-    // Hover states for interactive elements
-    const addHover = (selector, cls) => {
-      document.querySelectorAll(selector).forEach((el) => {
-        el.style.cursor = 'none';
-        el.addEventListener('mouseenter', () => ring.classList.add(cls));
-        el.addEventListener('mouseleave', () => ring.classList.remove(cls));
-      });
-    };
-
     // Use MutationObserver to attach hover states after React renders
     const observer = new MutationObserver(() => {
       document.querySelectorAll('a, button, input, .form-submit').forEach((el) => {

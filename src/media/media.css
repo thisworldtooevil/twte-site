@@ -62,10 +62,13 @@
 .media-btn:focus-visible{outline:2px solid var(--cream);outline-offset:4px}
 
 /* 7. close */
-.media-close{padding-bottom:160px}
+.media-close{padding-bottom:96px}
 .media-close-h{font-size:clamp(40px,6.4vw,92px);max-width:16ch}
 .media-close-cta{margin-top:48px;display:grid;justify-items:start;gap:4px}
 .media-close-cta .media-note{max-width:none}
+
+/* intake form (the homepage Contact component) */
+.media-form{padding-bottom:160px}
 
 /* responsive */
 @media(max-width:1000px){
@@ -81,7 +84,8 @@
   .media-pain{padding:36px 28px}
   .media-move{padding:36px 28px}
   .media-price{padding:40px 28px}
-  .media-close{padding-bottom:112px}
+  .media-close{padding-bottom:72px}
+  .media-form{padding-bottom:112px}
 }
 /* Phones: 16px side gutter. */
 @media(max-width:640px){
@@ -94,4 +98,5 @@
   .media-proof-line{margin-top:56px}
   .media-btn{width:100%}
   .media-close-cta{justify-items:stretch}
+  .media-form{padding-bottom:96px}
 }

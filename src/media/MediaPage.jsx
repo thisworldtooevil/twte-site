@@ -1,4 +1,7 @@
-import { useLenis } from '../hooks/useLenis';
+import { useCallback } from 'react';
+import { useLenis, getLenis } from '../hooks/useLenis';
+import { useContactDeepLink } from '../hooks/useContactDeepLink';
+import { announceContactArrival } from '../links';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { CustomCursor } from '../components/ui/CustomCursor';
 import { ScrollProgress } from '../components/ui/ScrollProgress';
@@ -6,6 +9,7 @@ import { Watermark } from '../components/ui/Watermark';
 import { MagneticButton } from '../components/ui/MagneticButton';
 import { Navigation } from '../components/layout/Navigation';
 import { Footer } from '../components/layout/Footer';
+import { Contact } from '../components/sections/Contact';
 import { ScrollReveal } from '../components/animation/ScrollReveal';
 import { SplitTextReveal } from '../components/animation/SplitTextReveal';
 import { hook, pains, bridge, plan, pricing, proof, close } from './content';
@@ -40,6 +44,20 @@ function Note({ children }) {
 
 export default function MediaPage() {
   useLenis();
+  // A direct link to /media/#contact glides to the form, as on the homepage.
+  useContactDeepLink();
+
+  // Same glide as the homepage nav's Get in Touch: Lenis, 80px nav offset,
+  // and the form shows in full on arrival instead of waiting to fade in.
+  const goToForm = useCallback((e) => {
+    const el = document.getElementById('contact');
+    if (!el) return;
+    e.preventDefault();
+    announceContactArrival();
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(el, { offset: -80 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
   return (
     <>
@@ -133,13 +151,26 @@ export default function MediaPage() {
           <div className="media-wrap">
             <Heading id="m-close" className="media-h2 media-close-h">{close.title[0]}<em>{close.title[1]}</em></Heading>
             <Reveal className="media-close-cta" delay={0.2}>
-              <MagneticButton href={close.href} className="media-btn">
+              <MagneticButton href={close.href} className="media-btn" onClick={goToForm}>
                 {close.button}
               </MagneticButton>
               <Note>{close.note}</Note>
             </Reveal>
           </div>
         </section>
+
+        {/* The homepage intake form, without its heading, intro, need chips
+            or Instagram button, on the page's own column and gutters. */}
+        <div className="media-wrap media-form">
+          <Contact
+            source="media"
+            need="Landscaping / home services"
+            intro={false}
+            social={false}
+            align="left"
+            style={{ padding: 0 }}
+          />
+        </div>
       </main>
 
       <Footer />

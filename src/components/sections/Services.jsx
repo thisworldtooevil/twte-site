@@ -95,7 +95,7 @@ function ServiceCard({ service, index, isMobile }) {
         <div style={{
           fontFamily: "'Space Mono', monospace",
           fontSize: 18,
-          color: hovered ? 'transparent' : 'var(--grey-dim)',
+          color: hovered ? 'transparent' : 'var(--grey-text)',
           transition: 'color 0.3s ease, opacity 0.3s ease',
           opacity: hovered ? 0 : 1,
           marginTop: 'auto',
