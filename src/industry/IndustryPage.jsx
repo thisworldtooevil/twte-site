@@ -10,6 +10,7 @@ import { MagneticButton } from '../components/ui/MagneticButton';
 import { Navigation } from '../components/layout/Navigation';
 import { Footer } from '../components/layout/Footer';
 import { Contact } from '../components/sections/Contact';
+import { SectionLabel } from '../components/layout/Section';
 import { ScrollReveal } from '../components/animation/ScrollReveal';
 import { SplitTextReveal } from '../components/animation/SplitTextReveal';
 
@@ -37,6 +38,15 @@ function Reveal({ children, delay = 0, ...rest }) {
   );
 }
 
+// Holds a card headline's last two words on one line, so it never ends with
+// one word alone. Typography only: the words themselves are untouched. (A
+// non-breaking space doesn't survive the word-by-word reveal; a no-wrap span does.)
+function keepLastTwo(s) {
+  const m = s.match(/^(.*)\s(\S+\s\S+)$/);
+  if (!m) return s;
+  return <>{m[1]} <span className="media-keep">{m[2]}</span></>;
+}
+
 function Note({ children }) {
   return <p className="media-note">{children}</p>;
 }
@@ -45,6 +55,7 @@ function Note({ children }) {
 // (src/industries/<slug>.js); nothing in here is specific to an industry.
 export default function IndustryPage({ content }) {
   const { page, hook, pains, bridge, plan, pricing, proof, close } = content;
+  const L = page.sectionLabels;
   useLenis();
   // A direct link to /<slug>/#contact glides to the form, as on the homepage.
   useContactDeepLink();
@@ -72,7 +83,10 @@ export default function IndustryPage({ content }) {
       <main id="main" className="media">
         {/* 1. Hook */}
         <header className="media-wrap media-hook">
-          <Heading as="h1" className="media-h1">{hook.title[0]}<em>{hook.title[1]}</em></Heading>
+          <div>
+            <SectionLabel>{L.hook}</SectionLabel>
+            <Heading as="h1" className="media-h1">{hook.title[0]}<em>{hook.title[1]}</em></Heading>
+          </div>
           <Reveal delay={0.2}>
             <p className="media-lede">{hook.body}</p>
             <Note>{hook.note}</Note>
@@ -82,12 +96,13 @@ export default function IndustryPage({ content }) {
         {/* 2. Pain cards */}
         <section className="media-section" aria-label={page.labels.pains}>
           <div className="media-wrap">
+            <SectionLabel>{L.pains}</SectionLabel>
             <ol className="media-pains">
               {pains.map((p, i) => (
                 <li key={p.num}>
                   <Reveal className="media-pain" delay={(i % 2) * 0.1}>
                     <span className="media-num" aria-hidden="true">{p.num}</span>
-                    <Heading as="h2" className="media-h3">{p.title}</Heading>
+                    <Heading as="h2" className="media-h3">{keepLastTwo(p.title)}</Heading>
                     <p className="media-body">{p.body}</p>
                     <Note>{p.note}</Note>
                   </Reveal>
@@ -100,11 +115,12 @@ export default function IndustryPage({ content }) {
         {/* 3. Bridge, 4. The plan */}
         <section className="media-section media-bridge" aria-labelledby="m-bridge">
           <div className="media-wrap">
+            <SectionLabel>{L.plan}</SectionLabel>
             <Heading id="m-bridge" className="media-h2">{bridge}</Heading>
             <div className="media-plan">
               {plan.map((b, i) => (
                 <Reveal as="article" key={b.title} className="media-move" delay={i * 0.12}>
-                  <Heading as="h3" className="media-move-title">{b.title}</Heading>
+                  <Heading as="h3" className="media-move-title">{keepLastTwo(b.title)}</Heading>
                   <p className="media-body">{b.body}</p>
                 </Reveal>
               ))}
@@ -115,6 +131,7 @@ export default function IndustryPage({ content }) {
         {/* 5. Pricing */}
         <section className="media-section" aria-label={page.labels.pricing}>
           <div className="media-wrap">
+            <SectionLabel>{L.pricing}</SectionLabel>
             <Reveal className="media-price">
               <Heading className="media-h2 media-price-h">
                 {pricing.lines.map((l, i) => (
@@ -130,6 +147,7 @@ export default function IndustryPage({ content }) {
         {/* 6. Proof */}
         <section className="media-section" aria-label={page.labels.proof}>
           <div className="media-wrap">
+            <SectionLabel>{L.proof}</SectionLabel>
             <ul className="media-stats">
               {proof.stats.map((s, i) => (
                 <li key={s.lead}>
@@ -151,6 +169,7 @@ export default function IndustryPage({ content }) {
         {/* 7. Close */}
         <section className="media-section media-close" aria-labelledby="m-close">
           <div className="media-wrap">
+            <SectionLabel>{L.close}</SectionLabel>
             <Heading id="m-close" className="media-h2 media-close-h">{close.title[0]}<em>{close.title[1].replace('30 minutes', '30\u00A0minutes')}</em></Heading>
             <Reveal className="media-close-cta" delay={0.2}>
               <MagneticButton href={close.href} className="media-btn" onClick={goToForm}>

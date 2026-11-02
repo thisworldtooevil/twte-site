@@ -12,6 +12,16 @@ export const page = {
   source: 'landscaping',
   need: 'Landscaping / home services',
   labels: { pains: 'What it costs you', pricing: 'Pricing', proof: 'Proof' },
+  // Visible section labels (the small spaced capitals with the thin rule, as
+  // on /proof). Set in sentence case; the label style capitalizes them.
+  sectionLabels: {
+    hook: 'For landscapers',
+    pains: 'The gap',
+    plan: 'The plan',
+    pricing: 'The price',
+    proof: 'The proof',
+    close: 'The call',
+  },
 };
 
 // Page copy below. LOCKED: transcribed verbatim from the approved brief.

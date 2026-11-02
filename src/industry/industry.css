@@ -63,6 +63,14 @@
 }
 .media-btn:focus-visible{outline:2px solid var(--cream);outline-offset:4px}
 
+/* Centered at every width: hook, section headlines and intro lines, and the
+   pricing panel's lines and notes. Card grids stay full width, so they sit
+   centered as blocks, and the text inside each card stays left-aligned. */
+.media-hook .media-h1,.media-lede,.media-hook .media-note,.media-bridge > .media-wrap > .media-h2{text-align:center;margin-left:auto;margin-right:auto;text-wrap:balance}
+.media-keep{white-space:nowrap}
+.media-price{text-align:center}
+.media-price .media-body,.media-price .media-small{margin-left:auto;margin-right:auto}
+
 /* 7. close */
 .media-close{padding-bottom:96px}
 .media-close-h{font-size:clamp(40px,6.4vw,92px);max-width:16ch;text-wrap:balance}
@@ -99,9 +107,9 @@
   .media-close{padding-bottom:72px}
   .media-form{padding-bottom:112px}
 }
-/* Phones: 16px side gutter. */
+/* Phones: 24px side gutter, the same as /proof. */
 @media(max-width:640px){
-  .media-wrap{padding:0 16px}
+  .media-wrap{padding:0 24px}
   .media-hook{min-height:0;padding-top:56px;padding-bottom:24px;gap:32px}
   .media-section{padding-top:96px}
   .media-pain,.media-move{padding:32px 20px}
