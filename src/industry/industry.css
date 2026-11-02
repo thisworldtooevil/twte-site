@@ -83,18 +83,14 @@
 .media-close-cta{margin-top:48px;display:grid;justify-items:start;gap:4px}
 .media-close-cta .media-note{max-width:none}
 
-/* Desktop: close and form centered on the page. Phones keep the left column. */
-@media(min-width:641px){
-  .media-close-h{text-align:center;margin-left:auto;margin-right:auto}
-  .media-close-cta{justify-items:center;text-align:center}
-}
+/* Close and form centered at every width. Form labels and inputs stay left. */
+.media-close-h{text-align:center;margin-left:auto;margin-right:auto}
+.media-close-cta{justify-items:center;text-align:center}
 
 /* intake form (the homepage Contact component) */
 .media-form{padding-bottom:160px}
-@media(min-width:641px){
-  .media-form > section{display:flex;flex-direction:column;align-items:center}
-  .media-form .inquiry-form,.media-form .inquiry-confirm{width:100%}
-}
+.media-form > section{display:flex;flex-direction:column;align-items:center}
+.media-form .inquiry-form,.media-form .inquiry-confirm{width:100%}
 
 /* responsive */
 @media(max-width:1000px){
