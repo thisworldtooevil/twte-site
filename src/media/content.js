@@ -75,8 +75,8 @@ export const proof = {
 };
 
 export const close = {
-  title: ["Somebody's building your next yard. ", "Make sure it's you."],
+  title: ["Your yards have curb appeal. ", "Give me 30 minutes, and I'll show you how your page earns it too."],
   button: 'Book your call',
   href: '#contact',
-  note: "30 minutes on Google Meet. I'll study your page before we talk.",
+  note: "It's free, and it happens on Google Meet.",
 };
