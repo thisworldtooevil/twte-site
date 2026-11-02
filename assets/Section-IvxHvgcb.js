@@ -1,1 +1,0 @@
-import{$ as e,J as t,Q as n,g as r}from"./globals-DCD8t7TB.js";var i=e(n(),1),a=t();function o({children:e,center:t}){let n=(0,i.useRef)(null);return(0,a.jsx)(`div`,{ref:n,className:`section-label${r(n,{once:!0,margin:`-12% 0px`})?` in-view`:``}`,style:t?{justifyContent:`center`}:void 0,children:e})}export{o as t};
