@@ -113,7 +113,7 @@ export function BrandIdentity() {
             <h1 style={{ margin: 0, lineHeight: 0, marginBottom: 32 }}>
               <img
                 src="/images/hero-title.png"
-                alt="TWTE Media — This World Too Evil"
+                alt="TWTE Media | This World Too Evil"
                 style={{
                   width: 'clamp(300px, 48vw, 580px)',
                   height: 'auto',

@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useLenis, getLenis } from '../hooks/useLenis';
 import { useContactDeepLink } from '../hooks/useContactDeepLink';
-import { useMediaQuery } from '../hooks/useMediaQuery';
 import { announceContactArrival } from '../links';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { CustomCursor } from '../components/ui/CustomCursor';
@@ -47,8 +46,6 @@ export default function MediaPage() {
   useLenis();
   // A direct link to /media/#contact glides to the form, as on the homepage.
   useContactDeepLink();
-  const isPhone = useMediaQuery('(max-width: 640px)');
-  const isNarrow = useMediaQuery('(max-width: 900px)');
 
   // Same glide as the homepage nav's Get in Touch: Lenis, 80px nav offset,
   // and the form shows in full on arrival instead of waiting to fade in.
@@ -162,13 +159,18 @@ export default function MediaPage() {
           </div>
         </section>
 
-        {/* The homepage intake form, without its heading and intro. */}
-        <Contact
-          source="media"
-          intro={false}
-          social={false}
-          style={{ padding: isPhone ? '0 16px 96px' : isNarrow ? '0 24px 112px' : '0 48px 160px' }}
-        />
+        {/* The homepage intake form, without its heading, intro, need chips
+            or Instagram button, on the page's own column and gutters. */}
+        <div className="media-wrap media-form">
+          <Contact
+            source="media"
+            need="Landscaping / home services"
+            intro={false}
+            social={false}
+            align="left"
+            style={{ padding: 0 }}
+          />
+        </div>
       </main>
 
       <Footer />
