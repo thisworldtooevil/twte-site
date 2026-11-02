@@ -38,15 +38,23 @@
 .media-move-title{font-family:'job-clarendon',serif;font-weight:900;font-size:clamp(34px,3.4vw,48px);line-height:1.08}
 
 /* 5. pricing */
-.media-price{background:var(--off-black);border:1px solid var(--rule);border-top:2px solid var(--red);padding:56px 48px;display:grid;gap:24px}
-.media-price-h{max-width:none}
-.media-line{display:block}
-.media-price .media-small{border-top:1px solid var(--rule);padding-top:20px;margin-top:8px}
+.media-plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px}
+.media-plan-card{text-align:left}
+.media-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--red-text)}
+.media-plan-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--grey-text)}
+.media-plan-card .media-move-title{margin-top:-8px}
+.media-bullets{display:grid;gap:12px}
+.media-bullets li{position:relative;padding-left:20px;font-size:16px;line-height:1.6;color:var(--cream-dim)}
+.media-bullets li::before{content:'';position:absolute;left:0;top:.65em;width:6px;height:6px;background:var(--red)}
+.media-plan-closing{font-size:16px;line-height:1.7;color:var(--cream);margin-top:auto;padding-top:8px}
+.media-price-foot{margin-top:48px;text-align:center;display:grid;gap:12px;justify-items:center}
+/* Italic only: the site's em is also red, which this line isn't. */
+.media .media-plain-em{color:inherit}
 
 /* 6. proof */
 .media-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px}
 .media-stats > li{min-width:0}
-.media-stat{border-top:1px solid var(--grey-dim);padding-top:24px}
+.media-stat{padding-top:24px}
 .media-stat p{font-size:16px;line-height:1.75;color:var(--cream-dim)}
 .media-big{display:block;font-family:'job-clarendon',serif;font-weight:900;font-size:clamp(40px,4.4vw,60px);line-height:1;color:var(--cream);font-variant-numeric:tabular-nums;margin-bottom:14px}
 .media-proof-line{margin-top:72px;display:flex;flex-direction:column;gap:48px;align-items:center;text-align:center}
@@ -68,8 +76,6 @@
    centered as blocks, and the text inside each card stays left-aligned. */
 .media-hook .media-h1,.media-lede,.media-hook .media-note,.media-bridge > .media-wrap > .media-h2{text-align:center;margin-left:auto;margin-right:auto;text-wrap:balance}
 .media-keep{white-space:nowrap}
-.media-price{text-align:center}
-.media-price .media-body,.media-price .media-small{margin-left:auto;margin-right:auto}
 
 /* 7. close */
 .media-close{padding-bottom:96px}
@@ -103,7 +109,6 @@
   .media-pains{grid-template-columns:minmax(0,1fr)}
   .media-pain{padding:36px 28px}
   .media-move{padding:36px 28px}
-  .media-price{padding:40px 28px}
   .media-close{padding-bottom:72px}
   .media-form{padding-bottom:112px}
 }
@@ -113,7 +118,8 @@
   .media-hook{min-height:0;padding-top:56px;padding-bottom:24px;gap:32px}
   .media-section{padding-top:96px}
   .media-pain,.media-move{padding:32px 20px}
-  .media-price{padding:36px 20px}
+  .media-plans{grid-template-columns:minmax(0,1fr)}
+  .media-plans > :nth-child(2){order:-1}
   .media-bridge .media-h2{margin-bottom:40px}
   .media-proof-line{margin-top:56px}
   .media-proof-line.callout-panel{padding:48px 20px;gap:36px}

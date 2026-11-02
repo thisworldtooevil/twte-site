@@ -83,8 +83,34 @@ export const plan = [
 ];
 
 export const pricing = {
-  // Two sentences of one line, set on two lines.
-  lines: ['One month, $5,000.', 'Three months, $6,000 total.'],
+  // Two cards. On phones they stack with the second (three-month) card first.
+  plans: [
+    {
+      label: 'ONE MONTH',
+      price: '$5,000',
+      bullets: [
+        'One shoot day',
+        '12 finished videos',
+        'Your Instagram, ads, or both, managed',
+        'The five-question lead setup',
+        "A lookback on what's working",
+      ],
+    },
+    {
+      tag: "THE ONE I'D PICK",
+      label: 'THREE MONTHS',
+      price: '$6,000 total',
+      bullets: [
+        '12 finished videos every month (36 total)',
+        'Your Instagram, ads, or both, managed for three months',
+        'The five-question lead setup',
+        'A lookback every month',
+        '$3,000 setup fee waived',
+      ],
+      closing: "I'm here to grow with your business.",
+    },
+  ],
+  // Under both cards, centered. The body line is set in italics.
   body: 'Ad spend, if any, goes straight from your account to Meta.',
   note: 'Production only: $3,000. One shoot day, 10 finished cuts, ready for your team to post or run.',
 };

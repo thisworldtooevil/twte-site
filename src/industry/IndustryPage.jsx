@@ -132,13 +132,21 @@ export default function IndustryPage({ content }) {
         <section className="media-section" aria-label={page.labels.pricing}>
           <div className="media-wrap">
             <SectionLabel>{L.pricing}</SectionLabel>
-            <Reveal className="media-price">
-              <Heading className="media-h2 media-price-h">
-                {pricing.lines.map((l, i) => (
-                  <span key={l} className="media-line">{l}{i < pricing.lines.length - 1 ? ' ' : ''}</span>
-                ))}
-              </Heading>
-              <p className="media-body">{pricing.body}</p>
+            <div className="media-plans">
+              {pricing.plans.map((plan, i) => (
+                <Reveal as="article" key={plan.label} className="media-move media-plan-card" delay={i * 0.12}>
+                  {plan.tag && <span className="media-tag">{plan.tag}</span>}
+                  <span className="media-plan-label">{plan.label}</span>
+                  <Heading as="h3" className="media-move-title">{plan.price}</Heading>
+                  <ul className="media-bullets">
+                    {plan.bullets.map((b) => <li key={b}>{b}</li>)}
+                  </ul>
+                  {plan.closing && <p className="media-plan-closing">{plan.closing}</p>}
+                </Reveal>
+              ))}
+            </div>
+            <Reveal className="media-price-foot">
+              <p className="media-body"><em className="media-plain-em">{pricing.body}</em></p>
               <p className="media-small">{pricing.note}</p>
             </Reveal>
           </div>
