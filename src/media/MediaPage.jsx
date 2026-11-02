@@ -139,7 +139,7 @@ export default function MediaPage() {
             </ul>
             <Reveal className="media-proof-line">
               <p className="media-pull">{proof.line}</p>
-              <MagneticButton href={proof.href} className="media-btn is-solid">
+              <MagneticButton href={proof.href} className="media-btn is-solid" target="_blank" rel="noopener noreferrer">
                 {proof.button}
               </MagneticButton>
             </Reveal>
