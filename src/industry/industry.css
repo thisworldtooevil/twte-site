@@ -132,3 +132,6 @@
 /* Italic headline words lean into each other in Safari (the s and g of "is
    guessing" touched on iPhone). A little more word space keeps them apart. */
 .media h1 em,.media h2 em,.media h3 em{word-spacing:.1em}
+
+/* Submit button (and its error line) centered under the form. */
+.media-form .inquiry-form > :last-child{display:flex;flex-direction:column;align-items:center;text-align:center}
