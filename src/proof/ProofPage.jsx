@@ -1,3 +1,4 @@
+import { keepLastTwo } from '../components/text/keepLastTwo';
 import { useRef, useCallback } from 'react';
 import { motion, useInView } from 'motion/react';
 import { useLenis, getLenis } from '../hooks/useLenis';
@@ -45,9 +46,20 @@ function Reveal({ children, delay = 0, className, style, as = 'div', ...rest }) 
 function Heading({ id, children, as = 'h2', className = 'proof-h2' }) {
   return (
     <SplitTextReveal as={as} id={id} className={className} ease="power3.out" duration={1} stagger={0.05}>
-      {children}
+      {keepLastTwo(children)}
     </SplitTextReveal>
   );
+}
+
+// Reels table columns. On phones each row becomes a card, and every cell shows
+// its column name from data-label, so nobody has to swipe sideways.
+const REEL_COLS = ['Week', 'Reel', 'Post views', 'Accounts reached', 'Avg watch', 'Shares', 'Saves', 'Share rate', 'Viewers 25 to 44'];
+function ReelCells({ cells }) {
+  return cells.map((v, i) => (
+    <td key={REEL_COLS[i]} role="cell" data-label={REEL_COLS[i]} className={i === 1 ? 'name' : undefined}>
+      {i === 2 && v !== '' ? <span className="is-organic">{v}</span> : v}
+    </td>
+  ));
 }
 
 const sideClass = (side) => (side === 'organic' ? ' is-organic' : side === 'paid' ? ' is-paid' : '');
@@ -88,7 +100,7 @@ export default function ProofPage() {
           <SplitTextReveal as="h1" className="proof-h1" ease="power3.out" duration={1.1} stagger={0.06}>
             {hero.title[0]}<em>{hero.title[1]}</em>{hero.title[2]}
           </SplitTextReveal>
-          <Reveal as="p" className="proof-lede" delay={0.1}>{hero.lede}</Reveal>
+          <Reveal as="p" className="proof-lede" delay={0.1}>{keepLastTwo(hero.lede)}</Reveal>
           <div className="proof-stats">
             {stats.map(([big, cap], i) => (
               <Reveal key={big} className="proof-stat" delay={0.15 + i * 0.08}>
@@ -104,13 +116,13 @@ export default function ProofPage() {
           <div className="proof-wrap">
             <SectionLabel>{wins.label}</SectionLabel>
             <Heading id="w-h">{wins.title}</Heading>
-            <Reveal as="p" className="proof-intro">{wins.intro}</Reveal>
+            <Reveal as="p" className="proof-intro">{keepLastTwo(wins.intro)}</Reveal>
             <div className="proof-wins">
               {wins.items.map((w, i) => (
                 <Reveal key={w.big} className="proof-win" delay={(i % 4) * 0.06}>
                   <span className={`proof-big${sideClass(w.side || 'organic')}`}>{w.big}</span>
-                  <p>{w.text}</p>
-                  <small>{w.small}</small>
+                  <p>{keepLastTwo(w.text)}</p>
+                  <small>{keepLastTwo(w.small)}</small>
                   <a className="proof-receipt-link" href={`#${w.receipt}`} onClick={(e) => goTo(e, w.receipt)}>
                     See the receipt
                   </a>
@@ -125,7 +137,7 @@ export default function ProofPage() {
           <div className="proof-wrap">
             <SectionLabel>{receipts.label}</SectionLabel>
             <Heading id="rc-h">{receipts.title}</Heading>
-            <Reveal as="p" className="proof-intro">{receipts.intro}</Reveal>
+            <Reveal as="p" className="proof-intro">{keepLastTwo(receipts.intro)}</Reveal>
             {receipts.groups.map((g) => (
               <div key={g.label} className="proof-rgroup" id={g.id} tabIndex={g.id ? -1 : undefined}>
                 <span className={`proof-label${sideClass(g.side)}`}>{g.label}</span>
@@ -160,7 +172,7 @@ export default function ProofPage() {
           <div className="proof-wrap">
             <SectionLabel>{timeline.label}</SectionLabel>
             <Heading id="t-h">{timeline.title}</Heading>
-            <Reveal as="p" className="proof-intro">{timeline.intro}</Reveal>
+            <Reveal as="p" className="proof-intro">{keepLastTwo(timeline.intro)}</Reveal>
             <Reveal><TimelineChart tabs={timeline.tabs} /></Reveal>
           </div>
         </section>
@@ -174,7 +186,7 @@ export default function ProofPage() {
               {[['paid', compare.paid], ['organic', compare.organic]].map(([side, c], i) => (
                 <Reveal as="article" key={side} className={`proof-side${sideClass(side)}`} delay={i * 0.1}>
                   <span className={`proof-label${sideClass(side)}`}>{c.label}</span>
-                  <h3>{c.title}</h3>
+                  <h3>{keepLastTwo(c.title)}</h3>
                   <span className="proof-when">{c.when}</span>
                   <span className={`proof-spend${sideClass(side)}`}>{c.spend}</span>
                   <dl className="proof-rows">
@@ -185,13 +197,13 @@ export default function ProofPage() {
                       </div>
                     ))}
                   </dl>
-                  <p className="proof-foot">{c.foot}</p>
+                  <p className="proof-foot">{keepLastTwo(c.foot)}</p>
                 </Reveal>
               ))}
             </div>
             <Reveal className="proof-value">
               <span className="proof-big is-organic">{compare.value.big}</span>
-              <p>{compare.value.text}</p>
+              <p>{keepLastTwo(compare.value.text)}</p>
             </Reveal>
           </div>
         </section>
@@ -213,7 +225,7 @@ export default function ProofPage() {
               </div>
               <Reveal as="ol" className="proof-points" delay={0.1}>
                 {playbook.points.map((p, i) => (
-                  <li key={p}><span className="proof-num">{String(i + 1).padStart(2, '0')}</span>{p}</li>
+                  <li key={p}><span className="proof-num">{String(i + 1).padStart(2, '0')}</span>{keepLastTwo(p)}</li>
                 ))}
               </Reveal>
             </div>
@@ -225,37 +237,29 @@ export default function ProofPage() {
           <div className="proof-wrap">
             <SectionLabel>{reelsSection.label}</SectionLabel>
             <Heading id="r-h">{reelsSection.title}</Heading>
-            <Reveal as="p" className="proof-intro">{reelsSection.intro}</Reveal>
+            <Reveal as="p" className="proof-intro">{keepLastTwo(reelsSection.intro)}</Reveal>
             <Reveal className="proof-tbl" role="region" aria-labelledby="r-h" tabIndex={0}>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Week</th><th>Reel</th><th>Post views</th><th>Accounts reached</th><th>Avg watch</th>
-                    <th>Shares</th><th>Saves</th><th>Share rate</th><th>Viewers 25 to 44</th>
+              <table role="table">
+                <thead role="rowgroup">
+                  <tr role="row">
+                    {REEL_COLS.map((c) => <th key={c} role="columnheader">{c}</th>)}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody role="rowgroup">
                   {data.reels.map((r) => (
-                    <tr key={r.reel} className={r.highlight ? 'is-hot' : undefined}>
-                      <td>{r.week}</td>
-                      <td className="name">Reel {r.reel}<span>{r.angle}</span></td>
-                      <td><span className="is-organic">{r.views}</span></td>
-                      <td>{r.reached}</td><td>{r.watch}</td><td>{r.shares}</td>
-                      <td>{r.saves}</td><td>{r.shareRate}</td><td>{r.age25to44}</td>
+                    <tr key={r.reel} role="row" className={r.highlight ? 'is-hot' : undefined}>
+                      <ReelCells cells={[r.week, <>Reel {r.reel}<span>{keepLastTwo(r.angle, 6)}</span></>, r.views, r.reached, r.watch, r.shares, r.saves, r.shareRate, r.age25to44]} />
                     </tr>
                   ))}
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <td></td><td className="name">All six</td>
-                    <td><span className="is-organic">{data.reelTotals.views}</span></td>
-                    <td>{data.reelTotals.reached}</td><td></td>
-                    <td>{data.reelTotals.shares}</td><td>{data.reelTotals.saves}</td><td></td><td></td>
+                <tfoot role="rowgroup">
+                  <tr role="row" className="is-total">
+                    <ReelCells cells={['', 'All six', data.reelTotals.views, data.reelTotals.reached, '', data.reelTotals.shares, data.reelTotals.saves, '', '']} />
                   </tr>
                 </tfoot>
               </table>
             </Reveal>
-            <Reveal as="p" className="proof-intro proof-after">{reelsSection.after}</Reveal>
+            <Reveal as="p" className="proof-intro proof-after">{keepLastTwo(reelsSection.after)}</Reveal>
           </div>
         </section>
 
@@ -264,7 +268,7 @@ export default function ProofPage() {
           <div className="proof-wrap">
             <SectionLabel>{commentsSection.label}</SectionLabel>
             <Heading id="q-h">{commentsSection.title}</Heading>
-            <Reveal as="p" className="proof-intro">{commentsSection.intro}</Reveal>
+            <Reveal as="p" className="proof-intro">{keepLastTwo(commentsSection.intro)}</Reveal>
             <div className="proof-quotes">
               {data.comments.map((file, i) => (
                 <Reveal as="figure" key={file} className="proof-q" delay={(i % 2) * 0.08}>
@@ -311,9 +315,9 @@ export default function ProofPage() {
           <div className="proof-wrap">
             <SectionLabel>{cta.label}</SectionLabel>
             <Heading id="y-h">{cta.title}</Heading>
-            <Reveal as="p" className="proof-intro">{cta.intro}</Reveal>
+            <Reveal as="p" className="proof-intro">{keepLastTwo(cta.intro)}</Reveal>
             <Reveal className="proof-cta callout-panel">
-              <p>{cta.pitch}</p>
+              <p>{keepLastTwo(cta.pitch)}</p>
               <MagneticButton href={cta.href} className="proof-cta-btn">
                 {cta.button}
               </MagneticButton>
@@ -329,7 +333,7 @@ export default function ProofPage() {
             <div className="proof-src">
               {method.lists.map((list, i) => (
                 <Reveal as="ul" key={i} delay={i * 0.08}>
-                  {list.map((item) => <li key={item}>{item}</li>)}
+                  {list.map((item) => <li key={item}>{keepLastTwo(item)}</li>)}
                 </Reveal>
               ))}
             </div>

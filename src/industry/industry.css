@@ -75,7 +75,6 @@
    pricing panel's lines and notes. Card grids stay full width, so they sit
    centered as blocks, and the text inside each card stays left-aligned. */
 .media-hook .media-h1,.media-lede,.media-hook .media-note,.media-bridge > .media-wrap > .media-h2{text-align:center;margin-left:auto;margin-right:auto;text-wrap:balance}
-.media-keep{white-space:nowrap}
 
 /* 7. close */
 .media-close{padding-bottom:96px}
@@ -126,3 +125,6 @@
   .media-close-cta{justify-items:stretch}
   .media-form{padding-bottom:96px}
 }
+
+/* Body text: avoid one word alone on a paragraph's last line. */
+.media p,.media li{text-wrap:pretty}
