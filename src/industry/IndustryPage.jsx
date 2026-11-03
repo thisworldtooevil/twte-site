@@ -1,3 +1,4 @@
+import { keepLastTwo } from '../components/text/keepLastTwo';
 import { useCallback } from 'react';
 import { useLenis, getLenis } from '../hooks/useLenis';
 import { useContactDeepLink } from '../hooks/useContactDeepLink';
@@ -41,11 +42,6 @@ function Reveal({ children, delay = 0, ...rest }) {
 // Holds a card headline's last two words on one line, so it never ends with
 // one word alone. Typography only: the words themselves are untouched. (A
 // non-breaking space doesn't survive the word-by-word reveal; a no-wrap span does.)
-function keepLastTwo(s) {
-  const m = s.match(/^(.*)\s(\S+\s\S+)$/);
-  if (!m) return s;
-  return <>{m[1]} <span className="media-keep">{m[2]}</span></>;
-}
 
 function Note({ children }) {
   return <p className="media-note">{children}</p>;

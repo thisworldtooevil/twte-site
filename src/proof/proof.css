@@ -101,6 +101,28 @@
 .proof-tbl tr.is-hot td{background:rgba(139,34,34,0.14)}
 .proof-tbl tfoot td{color:var(--cream);background:var(--off-black)}
 
+/* Phones: each reel is a card, every number labelled, nothing to swipe. */
+@media(max-width:699px){
+  .proof-tbl{overflow:visible;border:0;background:none}
+  .proof-tbl table,.proof-tbl tbody,.proof-tbl tfoot{display:block;min-width:0}
+  .proof-tbl thead{display:none}
+  .proof-tbl tbody,.proof-tbl tfoot{display:grid;gap:2px}
+  .proof-tbl tfoot{margin-top:2px}
+  .proof-tbl tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 16px;padding:24px 20px;background:var(--card-bg);border-top:2px solid var(--rule)}
+  .proof-tbl tr.is-hot{background:rgba(139,34,34,0.14);border-top-color:var(--red)}
+  .proof-tbl tr.is-total{background:var(--off-black)}
+  .proof-tbl th,.proof-tbl td,.proof-tbl tr.is-hot td,.proof-tbl tfoot td{padding:0;border:0;background:none;text-align:left;white-space:normal;min-width:0}
+  .proof-tbl td{font-size:14px}
+  .proof-tbl td:empty{display:none}
+  .proof-tbl td::before{content:attr(data-label);display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--grey-text);margin-bottom:6px}
+  .proof-tbl td:first-child{grid-column:1/-1;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--grey-text)}
+  .proof-tbl td:first-child::before{display:inline;margin:0 .6em 0 0}
+  .proof-tbl td.name{grid-column:1/-1;min-width:0;font-size:16px;margin-top:-10px}
+  .proof-tbl td.name::before{display:none}
+  .proof-tbl td.name span{font-size:13px;margin-top:4px}
+  .proof-tbl td:nth-child(3){grid-column:1/-1;font-size:28px;line-height:1.2}
+}
+
 /* comments */
 .proof-quotes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
 .proof-q{background:var(--card-bg);border:1px solid var(--rule);overflow:hidden;min-width:0}
@@ -151,3 +173,7 @@
   .proof-wins{grid-template-columns:minmax(0,1fr)}
   .proof-cta-btn{width:100%;justify-content:center}
 }
+
+/* Body text: avoid one word alone on a paragraph's last line. */
+.proof p,.proof li,.proof dd,.proof small{text-wrap:pretty}
+.proof-side h3,.proof-points li{text-wrap:balance}
