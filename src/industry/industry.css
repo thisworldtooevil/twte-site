@@ -128,3 +128,7 @@
 
 /* Body text: avoid one word alone on a paragraph's last line. */
 .media p,.media li{text-wrap:pretty}
+
+/* Italic headline words lean into each other in Safari (the s and g of "is
+   guessing" touched on iPhone). A little more word space keeps them apart. */
+.media h1 em,.media h2 em,.media h3 em{word-spacing:.1em}
