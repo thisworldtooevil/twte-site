@@ -121,7 +121,7 @@ export const proof = {
     { lead: '7,490', rest: ' new followers from that push.' },
     { lead: '38 cents', rest: ' per link click on the paid side.' },
   ],
-  line: 'I got millions of people to stop scrolling for a health app. Your yards have a head start.',
+  line: 'I got millions of people to stop scrolling for a health app. Your installs have a head start.',
   button: 'See the receipts',
   href: '/proof/',
 };
