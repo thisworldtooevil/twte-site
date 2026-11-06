@@ -41,6 +41,7 @@ export function HowItWorks() {
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
           gap: isMobile ? 0 : 2,
+          alignItems: 'stretch',
         }}
       >
         {steps.map((step, i) => (
@@ -50,6 +51,8 @@ export function HowItWorks() {
                 background: 'var(--card-bg)',
                 padding: isMobile ? '36px 28px' : '48px 40px',
                 border: '1px solid var(--rule)',
+                height: '100%',
+                boxSizing: 'border-box',
                 transition: 'border-color 0.4s, transform 0.4s, box-shadow 0.4s',
               }}
               onMouseEnter={(e) => {
