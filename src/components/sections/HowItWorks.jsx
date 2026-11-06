@@ -21,7 +21,7 @@ const steps = [
   {
     num: '04 / Alignment',
     name: 'We start with a conversation',
-    desc: 'Every engagement opens with a full brand audit and alignment call. If the vision is not locked before we start, we do not start.',
+    desc: "Every engagement opens with an alignment call. If the vision is not locked before the end of the call, we don't move forward.",
   },
 ];
 

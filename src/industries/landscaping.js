@@ -111,8 +111,8 @@ export const pricing = {
     },
   ],
   // Under both cards, centered. The body line is set in italics.
-  body: 'Ad spend, if any, goes straight from your account to Meta.',
-  note: 'Production only: $3,000. One shoot day, 10 finished cuts, ready for your team to post or run.',
+  body: 'Prices are plus travel and expenses. Ad spend, if any, goes straight from your account to Meta.',
+  note: 'Production only: $3,000 plus travel and expenses. One shoot day, 10 finished cuts, ready for your team to post or run.',
 };
 
 export const proof = {
