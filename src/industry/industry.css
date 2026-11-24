@@ -59,10 +59,6 @@
 .media-production > *{padding:0 36px}
 .media-production-price{display:flex;flex-direction:column;gap:20px;min-width:0;order:2}
 .media-production-copy{display:grid;gap:10px;min-width:0}
-/* Optical nudge: lifts the 16px hook so its capitals line up with the 11px
-   label's (their line spacing puts the hook's letters 3.3px lower). Side by
-   side only; reset on phones. */
-.media-production-copy{margin-top:-3.3px}
 .media-production-hook{font-size:16px;line-height:1.6;color:var(--cream)}
 .media-price-foot{margin-top:48px;text-align:center;display:grid;gap:12px;justify-items:center}
 /* Italic only: the site's em is also red, which this line isn't. */
@@ -138,7 +134,6 @@
   .media-production{padding:32px 0;grid-template-columns:minmax(0,1fr)}
   .media-production > *{padding:0 20px}
   .media-production-price{order:0}
-  .media-production-copy{margin-top:0}
   .media-plans > :nth-child(2){order:-1}
   .media-bridge .media-h2{margin-bottom:40px}
   .media-proof-line{margin-top:56px}
