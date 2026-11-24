@@ -141,9 +141,19 @@ export default function IndustryPage({ content }) {
                 </Reveal>
               ))}
             </div>
+            {/* Third option: a full-width band under both cards, no card fill. */}
+            <Reveal as="article" className="media-production" delay={0.24}>
+              <div className="media-production-price">
+                <span className="media-plan-label">{pricing.production.label}</span>
+                <Heading as="h3" className="media-production-title">{pricing.production.price}</Heading>
+              </div>
+              <div className="media-production-copy">
+                <p className="media-production-hook">{pricing.production.hook}</p>
+                <p className="media-small">{pricing.production.line}</p>
+              </div>
+            </Reveal>
             <Reveal className="media-price-foot">
               <p className="media-body"><em className="media-plain-em">{pricing.body}</em></p>
-              <p className="media-small">{pricing.note}</p>
             </Reveal>
           </div>
         </section>

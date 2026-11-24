@@ -110,9 +110,15 @@ export const pricing = {
       closing: "I'm here to grow with your business.",
     },
   ],
-  // Under both cards, centered. The body line is set in italics.
+  // Third option, a full-width band under both cards.
+  production: {
+    label: 'Production only',
+    price: '$3,000',
+    hook: 'Already have someone running your ads? Give them something worth running.',
+    line: 'One shoot day, 9 finished videos, ready for your team to post or run.',
+  },
+  // Under all three prices, centered. Set in italics.
   body: 'Prices are plus travel and expenses. Ad spend, if any, goes straight from your account to Meta.',
-  note: 'Production only: $3,000 plus travel and expenses. One shoot day, 10 finished cuts, ready for your team to post or run.',
 };
 
 export const proof = {
