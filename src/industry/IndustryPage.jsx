@@ -131,8 +131,12 @@ export default function IndustryPage({ content }) {
             <div className="media-plans">
               {pricing.plans.map((plan, i) => (
                 <Reveal as="article" key={plan.label} className="media-move media-plan-card" delay={i * 0.12}>
-                  {plan.tag && <span className="media-tag">{plan.tag}</span>}
-                  <span className="media-plan-label">{plan.label}</span>
+                  {/* Label and tag share one row, so both cards' labels and
+                      prices sit on the same lines. */}
+                  <div className="media-plan-head">
+                    <span className="media-plan-label">{plan.label}</span>
+                    {plan.tag && <span className="media-tag">{plan.tag}</span>}
+                  </div>
                   <Heading as="h3" className="media-move-title">{plan.price}</Heading>
                   <ul className="media-bullets">
                     {plan.bullets.map((b) => <li key={b}>{b}</li>)}
@@ -145,7 +149,7 @@ export default function IndustryPage({ content }) {
             <Reveal as="article" className="media-production" delay={0.24}>
               <div className="media-production-price">
                 <span className="media-plan-label">{pricing.production.label}</span>
-                <Heading as="h3" className="media-production-title">{pricing.production.price}</Heading>
+                <Heading as="h3" className="media-move-title">{pricing.production.price}</Heading>
               </div>
               <div className="media-production-copy">
                 <p className="media-production-hook">{pricing.production.hook}</p>

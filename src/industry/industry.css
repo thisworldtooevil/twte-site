@@ -42,16 +42,18 @@
 .media-plan-card{text-align:left}
 .media-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--red-text)}
 .media-plan-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--grey-text)}
-.media-plan-card .media-move-title{margin-top:-8px}
+.media-plan-card .media-move-title,.media-production .media-move-title{margin-top:-8px}
+/* Label left, tag right, on one row. */
+.media-plan-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
 .media-bullets{display:grid;gap:12px}
 .media-bullets li{position:relative;padding-left:20px;font-size:16px;line-height:1.6;color:var(--cream-dim)}
 .media-bullets li::before{content:'';position:absolute;left:0;top:.65em;width:6px;height:6px;background:var(--red)}
 .media-plan-closing{font-size:16px;line-height:1.7;color:var(--cream);margin-top:auto;padding-top:8px}
 /* Production only: a third pricing card spanning both card columns. Same fill,
-   red top border and 2px gap as the plan cards. Price at about 60% of theirs. */
+   red top border and 2px gap as the plan cards. Label and price come first in
+   the page; on wide screens they sit in the right column, against the edge. */
 .media-production{margin-top:2px;background:var(--card-bg);border-top:2px solid var(--red);padding:44px 36px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 72px;align-items:center;text-align:left}
-.media-production-price{display:flex;flex-direction:column;gap:12px;min-width:0}
-.media-production-title{font-family:'job-clarendon',serif;font-weight:900;font-size:clamp(20px,2.04vw,29px);line-height:1.08}
+.media-production-price{display:flex;flex-direction:column;gap:20px;min-width:0;order:2;text-align:right;align-items:flex-end}
 .media-production-copy{display:grid;gap:10px;min-width:0}
 .media-production-hook{font-size:16px;line-height:1.6;color:var(--cream)}
 .media-price-foot{margin-top:48px;text-align:center;display:grid;gap:12px;justify-items:center}
@@ -124,6 +126,7 @@
   .media-pain,.media-move,.media-production{padding:32px 20px}
   .media-plans{grid-template-columns:minmax(0,1fr)}
   .media-production{grid-template-columns:minmax(0,1fr)}
+  .media-production-price{order:0;text-align:left;align-items:flex-start}
   .media-plans > :nth-child(2){order:-1}
   .media-bridge .media-h2{margin-bottom:40px}
   .media-proof-line{margin-top:56px}
@@ -143,3 +146,15 @@
 
 /* Submit button (and its error line) centered under the form. */
 .media-form .inquiry-form > :last-child{display:flex;flex-direction:column;align-items:center;text-align:center}
+/* When a card is too narrow for label and tag on one row (about 273px of
+   content), the tag moves to the card's top-right corner instead. Keyed to
+   the card's own width, so it covers narrow phones and the narrow
+   side-by-side range alike. */
+.media-plan-card{container-type:inline-size;position:relative}
+.media-plan-head .media-tag{white-space:nowrap}
+@container (max-width:279px){
+  .media-plan-head .media-tag{position:absolute;top:12px;right:20px}
+  /* Room under the corner tag (at least 16px). Applied to both cards' label
+     rows so the labels still line up when the cards sit side by side. */
+  .media-plan-head{padding-top:14px}
+}
