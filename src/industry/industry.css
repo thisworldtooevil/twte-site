@@ -50,11 +50,19 @@
 .media-bullets li::before{content:'';position:absolute;left:0;top:.65em;width:6px;height:6px;background:var(--red)}
 .media-plan-closing{font-size:16px;line-height:1.7;color:var(--cream);margin-top:auto;padding-top:8px}
 /* Production only: a third pricing card spanning both card columns. Same fill,
-   red top border and 2px gap as the plan cards. Label and price come first in
-   the page; on wide screens they sit in the right column, against the edge. */
-.media-production{margin-top:2px;background:var(--card-bg);border-top:2px solid var(--red);padding:44px 36px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 72px;align-items:center;text-align:left}
-.media-production-price{display:flex;flex-direction:column;gap:20px;min-width:0;order:2;text-align:right;align-items:flex-end}
+   red top border and 2px gap as the plan cards. Its two columns mirror the two
+   cards above (equal halves, 2px gutter, the cards' side padding on each), so
+   the hook lines up with the one-month card's content and the label and price
+   with the three-month card's. Label and price come first in the page; on
+   wide screens they sit in the right column. */
+.media-production{margin-top:2px;background:var(--card-bg);border-top:2px solid var(--red);padding:44px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 2px;align-items:start;text-align:left}
+.media-production > *{padding:0 36px}
+.media-production-price{display:flex;flex-direction:column;gap:20px;min-width:0;order:2}
 .media-production-copy{display:grid;gap:10px;min-width:0}
+/* Optical nudge: lifts the 16px hook so its capitals line up with the 11px
+   label's (their line spacing puts the hook's letters 3.3px lower). Side by
+   side only; reset on phones. */
+.media-production-copy{margin-top:-3.3px}
 .media-production-hook{font-size:16px;line-height:1.6;color:var(--cream)}
 .media-price-foot{margin-top:48px;text-align:center;display:grid;gap:12px;justify-items:center}
 /* Italic only: the site's em is also red, which this line isn't. */
@@ -114,7 +122,9 @@
   .media-section{padding-top:112px}
   .media-pains{grid-template-columns:minmax(0,1fr)}
   .media-pain{padding:36px 28px}
-  .media-move,.media-production{padding:36px 28px}
+  .media-move{padding:36px 28px}
+  .media-production{padding:36px 0}
+  .media-production > *{padding:0 28px}
   .media-close{padding-bottom:72px}
   .media-form{padding-bottom:112px}
 }
@@ -123,10 +133,12 @@
   .media-wrap{padding:0 24px}
   .media-hook{min-height:0;padding-top:56px;padding-bottom:24px;gap:32px}
   .media-section{padding-top:96px}
-  .media-pain,.media-move,.media-production{padding:32px 20px}
+  .media-pain,.media-move{padding:32px 20px}
   .media-plans{grid-template-columns:minmax(0,1fr)}
-  .media-production{grid-template-columns:minmax(0,1fr)}
-  .media-production-price{order:0;text-align:left;align-items:flex-start}
+  .media-production{padding:32px 0;grid-template-columns:minmax(0,1fr)}
+  .media-production > *{padding:0 20px}
+  .media-production-price{order:0}
+  .media-production-copy{margin-top:0}
   .media-plans > :nth-child(2){order:-1}
   .media-bridge .media-h2{margin-bottom:40px}
   .media-proof-line{margin-top:56px}
