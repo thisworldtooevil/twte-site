@@ -1,0 +1,1 @@
+import{J as e}from"./globals-ChRYCF2c.js";var t=e();function n(e,n=3){if(typeof e!=`string`||e.trim().split(/\s+/).length<n)return e;let r=e.match(/^(.*)\s(\S+\s\S+)$/);return r?(0,t.jsxs)(t.Fragment,{children:[r[1],` `,(0,t.jsx)(`span`,{className:`keep-together`,children:r[2]})]}):e}export{n as t};
